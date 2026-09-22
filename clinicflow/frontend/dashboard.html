@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - ClinicFlow</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container has-right-panel">
+        <!-- Sidebar -->
+        <div class="sidebar-wrapper">
+            <aside class="sidebar">
+                <div class="logo-icon">C</div>
+                <nav class="nav-menu">
+                    <a href="dashboard.html" class="nav-link active" data-tooltip="Dashboard">
+                        <i data-lucide="layout-dashboard" stroke-width="1.5"></i>
+                    </a>
+                    <a href="pacientes.html" class="nav-link" data-tooltip="Pacientes">
+                        <i data-lucide="users" stroke-width="1.5"></i>
+                    </a>
+                    <a href="medicos.html" class="nav-link admin-only" data-tooltip="Médicos">
+                        <i data-lucide="stethoscope" stroke-width="1.5"></i>
+                    </a>
+                    <a href="consultas.html" class="nav-link" data-tooltip="Consultas">
+                        <i data-lucide="calendar" stroke-width="1.5"></i>
+                    </a>
+                    <a href="admin-users.html" class="nav-link admin-only" data-tooltip="Utilizadores">
+                        <i data-lucide="shield" stroke-width="1.5"></i>
+                    </a>
+                </nav>
+                <div class="sidebar-bottom">
+                    <a href="#" class="nav-link" data-tooltip="Sair" onclick="logout()">
+                        <i data-lucide="log-out" stroke-width="1.5"></i>
+                    </a>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-area">
+            
+            <div class="welcome-banner">
+                <div class="welcome-text">
+                    <h1>Olá, <span id="user-name">Usuário</span></h1>
+                    <p>Tenha um ótimo dia. Aqui está o resumo da clínica.</p>
+                </div>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <button class="btn-icon"><i data-lucide="bell" stroke-width="1.5"></i></button>
+                </div>
+            </div>
+
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="summary-icon"><i data-lucide="users" stroke-width="1.5"></i></div>
+                    <div class="summary-info">
+                        <span class="summary-title">Pacientes Cadastrados</span>
+                        <div class="summary-value" id="stat-pacientes">--</div>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon"><i data-lucide="calendar-check" stroke-width="1.5"></i></div>
+                    <div class="summary-info">
+                        <span class="summary-title">Consultas Hoje</span>
+                        <div class="summary-value" id="stat-consultas">--</div>
+                    </div>
+                </div>
+                <div class="summary-card admin-only">
+                    <div class="summary-icon"><i data-lucide="activity" stroke-width="1.5"></i></div>
+                    <div class="summary-info">
+                        <span class="summary-title">Médicos Ativos</span>
+                        <div class="summary-value" id="stat-medicos">--</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">Consultas da Semana</h3>
+                        <button class="btn-icon" style="width:32px; height:32px;"><i data-lucide="more-horizontal"></i></button>
+                    </div>
+                    <!-- Chart area with no gridlines and rounded bars -->
+                    <div id="grafico-semana" style="height: 180px; display: flex; align-items: flex-end; justify-content: space-around; gap: 1rem; padding-top: 1rem;">
+                        <!-- JS fará o append das barras -->
+                    </div>
+                    <div style="display: flex; justify-content: space-around; margin-top: 1rem; color: var(--text-muted); font-size: 0.8rem; font-weight: 500;">
+                        <span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span>
+                    </div>
+                </div>
+
+                <div class="content-panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">Status da Semana</h3>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                <span style="font-size: 0.875rem; color: var(--text-muted); font-weight: 500;">Realizadas</span>
+                                <span style="font-weight: 700; color: var(--text-main);" id="status-realizadas-text">0%</span>
+                            </div>
+                            <div style="background: var(--bg-main); height: 6px; border-radius: 4px;"><div id="status-realizadas-bar" style="background: var(--success-text); width: 0%; height: 100%; border-radius: 4px; transition: width 0.5s ease;"></div></div>
+                        </div>
+                        
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                <span style="font-size: 0.875rem; color: var(--text-muted); font-weight: 500;">Agendadas</span>
+                                <span style="font-weight: 700; color: var(--text-main);" id="status-agendadas-text">0%</span>
+                            </div>
+                            <div style="background: var(--bg-main); height: 6px; border-radius: 4px;"><div id="status-agendadas-bar" style="background: var(--warning-text); width: 0%; height: 100%; border-radius: 4px; transition: width 0.5s ease;"></div></div>
+                        </div>
+
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                <span style="font-size: 0.875rem; color: var(--text-muted); font-weight: 500;">Canceladas</span>
+                                <span style="font-weight: 700; color: var(--text-main);" id="status-canceladas-text">0%</span>
+                            </div>
+                            <div style="background: var(--bg-main); height: 6px; border-radius: 4px;"><div id="status-canceladas-bar" style="background: var(--error-text); width: 0%; height: 100%; border-radius: 4px; transition: width 0.5s ease;"></div></div>
+                        </div>
+
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                <span style="font-size: 0.875rem; color: var(--text-muted); font-weight: 500;">Não Realizadas</span>
+                                <span style="font-weight: 700; color: var(--text-main);" id="status-nao-realizadas-text">0%</span>
+                            </div>
+                            <div style="background: var(--bg-main); height: 6px; border-radius: 4px;"><div id="status-nao-realizadas-bar" style="background: #a0aec0; width: 0%; height: 100%; border-radius: 4px; transition: width 0.5s ease;"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Panel (Dark) -->
+        <div class="right-panel-wrapper">
+            <aside class="right-panel">
+                <div class="user-profile">
+                    <div class="avatar" id="avatar-initial">U</div>
+                    <div class="user-info">
+                        <h4 id="profile-name">Carregando...</h4>
+                        <p id="user-role">Role</p>
+                    </div>
+                </div>
+
+                <div class="dark-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; color: white; font-weight: 700;" id="calendar-header"></div>
+                    <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; text-align: center;" id="calendar-grid"></div>
+                </div>
+
+                <div>
+                    <h4 id="agenda-title" style="font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem;">Agenda do Dia</h4>
+                    <div class="agenda-list" id="agenda-list-body">
+                        <div style="text-align: center; color: rgba(255,255,255,0.7); font-size: 0.875rem;">Carregando...</div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        lucide.createIcons();
+
+        async function carregarAgendaDoDia(dataAtual) {
+            const token = localStorage.getItem('token');
+            const agendaBody = document.getElementById('agenda-list-body');
+            const consultasHojeEl = document.getElementById('stat-consultas');
+            
+            agendaBody.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.7); font-size: 0.875rem;">Carregando...</div>';
+
+            try {
+                // Fetch com o parametro data para trazer apenas as da data e ja ordenadas asc
+                const response = await fetch(`http://localhost:8000/api/consultas/?skip=0&limit=1000&data=${dataAtual}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if(!response.ok) throw new Error('Erro na resposta');
+                const data = await response.json();
+                
+                const consultasHoje = data.items;
+                
+                // Filter out canceled appointments for the dashboard count
+                const countNaoCanceladas = consultasHoje.filter(c => !["cancelada", "canceladas", "nao realizada", "falta"].includes(c.status?.toLowerCase())).length;
+                
+                if (consultasHojeEl) consultasHojeEl.textContent = countNaoCanceladas;
+
+                agendaBody.innerHTML = '';
+                if (consultasHoje.length === 0) {
+                    agendaBody.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.7); font-size: 0.875rem;">Nenhuma consulta para este dia.</div>';
+                } else {
+                    consultasHoje.forEach(c => {
+                        const div = document.createElement('div');
+                        div.className = 'agenda-item';
+                        div.innerHTML = `
+                            <div class="agenda-time">${c.horario.substring(0,5)}</div>
+                            <div class="agenda-details">
+                                <h5>${c.paciente.user.nome}</h5>
+                                <p>${c.medico.user.nome} - ${c.medico.especialidade}</p>
+                            </div>
+                        `;
+                        agendaBody.appendChild(div);
+                    });
+                }
+            } catch (error) {
+                console.error(error);
+                agendaBody.innerHTML = '<div style="text-align: center; color: #F56565; font-size: 0.875rem;">Erro ao buscar agenda.</div>';
+                if (consultasHojeEl) consultasHojeEl.textContent = "--";
+            }
+        }
+
+        async function carregarGraficoSemanaEStatus() {
+            const token = localStorage.getItem('token');
+            const chartContainer = document.getElementById('grafico-semana');
+            if(!chartContainer) return;
+            
+            try {
+                // Gráfico da Semana
+                const response = await fetch(`http://localhost:8000/api/consultas/estatisticas/semana`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if(response.ok) {
+                    const data = await response.json();
+                    const valores = data.dados_semana;
+                    
+                    const maxVal = Math.max(...valores, 1);
+                    chartContainer.innerHTML = '';
+                    
+                    const hojeDiaSemana = new Date().getDay(); 
+                    const indexHoje = hojeDiaSemana - 1; 
+                    
+                    valores.forEach((val, index) => {
+                        const perc = (val / maxVal) * 100;
+                        const cssClass = index === indexHoje ? 'chart-bar' : 'chart-bar secondary';
+                        chartContainer.innerHTML += `
+                            <div class="${cssClass}" style="height: ${perc}%; position: relative;" title="${val} consultas">
+                                <span style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: 600; color: var(--text-main);">${val}</span>
+                            </div>`;
+                    });
+                }
+
+                // Status (Realizadas, Agendadas, Canceladas)
+                const resStatus = await fetch(`http://localhost:8000/api/consultas/estatisticas/status`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if(resStatus.ok) {
+                    const dataStatus = await resStatus.json();
+                    document.getElementById('status-realizadas-text').textContent = dataStatus.realizadas + '%';
+                    document.getElementById('status-realizadas-bar').style.width = dataStatus.realizadas + '%';
+
+                    document.getElementById('status-agendadas-text').textContent = dataStatus.agendadas + '%';
+                    document.getElementById('status-agendadas-bar').style.width = dataStatus.agendadas + '%';
+
+                    document.getElementById('status-canceladas-text').textContent = dataStatus.canceladas + '%';
+                    document.getElementById('status-canceladas-bar').style.width = dataStatus.canceladas + '%';
+
+                    document.getElementById('status-nao-realizadas-text').textContent = dataStatus.nao_realizadas + '%';
+                    document.getElementById('status-nao-realizadas-bar').style.width = dataStatus.nao_realizadas + '%';
+                }
+
+            } catch (error) {
+                console.error('Erro gráfico:', error);
+                chartContainer.innerHTML = '<div style="color: #F56565; font-size: 0.85rem; align-self: center; width: 100%; text-align: center;">Erro ao carregar gráfico</div>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            const hojeReal = new Date();
+            const dataStr = hojeReal.toISOString().split('T')[0];
+            let dataBaseCalendario = new Date();
+
+            function renderizarCalendario() {
+                const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+                
+                document.getElementById('calendar-header').innerHTML = `
+                    <span>${meses[dataBaseCalendario.getMonth()]} ${dataBaseCalendario.getFullYear()}</span>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <i id="cal-prev" data-lucide="chevron-left" style="width: 16px; height: 16px; cursor: pointer;"></i>
+                        <i id="cal-next" data-lucide="chevron-right" style="width: 16px; height: 16px; cursor: pointer;"></i>
+                    </div>
+                `;
+                
+                document.getElementById('cal-prev').addEventListener('click', () => {
+                    dataBaseCalendario.setMonth(dataBaseCalendario.getMonth() - 1);
+                    renderizarCalendario();
+                });
+                document.getElementById('cal-next').addEventListener('click', () => {
+                    dataBaseCalendario.setMonth(dataBaseCalendario.getMonth() + 1);
+                    renderizarCalendario();
+                });
+
+                const grid = document.getElementById('calendar-grid');
+                grid.innerHTML = `
+                    <span style="color: rgba(255,255,255,0.5); font-size: 0.75rem;">D</span>
+                    <span style="color: rgba(255,255,255,0.5); font-size: 0.75rem;">S</span>
+                    <span style="color: rgba(255,255,255,0.5); font-size: 0.75rem;">T</span>
+                    <span style="color: rgba(255,255,255,0.5); font-size: 0.75rem;">Q</span>
+                    <span style="color: rgba(255,255,255,0.5); font-size: 0.75rem;">Q</span>
+                    <span style="color: rgba(255,255,255,0.5); font-size: 0.75rem;">S</span>
+                    <span style="color: rgba(255,255,255,0.5); font-size: 0.75rem;">S</span>
+                `;
+                
+                const primeiroDia = new Date(dataBaseCalendario.getFullYear(), dataBaseCalendario.getMonth(), 1);
+                const ultimoDia = new Date(dataBaseCalendario.getFullYear(), dataBaseCalendario.getMonth() + 1, 0);
+                
+                // Preenche espaços vazios antes do dia 1
+                for(let i = 0; i < primeiroDia.getDay(); i++) {
+                    grid.appendChild(document.createElement('span'));
+                }
+                
+                for(let day = 1; day <= ultimoDia.getDate(); day++) {
+                    const span = document.createElement('span');
+                    span.textContent = day;
+                    span.className = 'calendar-day';
+                    span.style.cssText = "font-size: 0.85rem; display: flex; align-items: center; justify-content: center; height: 24px; cursor: pointer; transition: 0.2s;";
+                    
+                    if(day === hojeReal.getDate() && dataBaseCalendario.getMonth() === hojeReal.getMonth() && dataBaseCalendario.getFullYear() === hojeReal.getFullYear()) {
+                        span.classList.add('active');
+                        span.style.background = "var(--primary)";
+                        span.style.color = "white";
+                        span.style.borderRadius = "8px";
+                        span.style.fontWeight = "700";
+                    }
+                    
+                    span.addEventListener('click', function() {
+                        document.querySelectorAll('.calendar-day').forEach(el => {
+                            el.classList.remove('active');
+                            el.style.background = "transparent";
+                            el.style.color = "inherit";
+                            el.style.fontWeight = "normal";
+                        });
+                        
+                        this.classList.add('active');
+                        this.style.background = "var(--primary)";
+                        this.style.color = "white";
+                        this.style.borderRadius = "8px";
+                        this.style.fontWeight = "700";
+                        
+                        const m = String(dataBaseCalendario.getMonth() + 1).padStart(2, '0');
+                        const d = String(day).padStart(2, '0');
+                        const y = dataBaseCalendario.getFullYear();
+                        const dStr = `${y}-${m}-${d}`;
+                        
+                        document.getElementById('agenda-title').textContent = `Agenda: ${d}/${m}/${y}`;
+                        carregarAgendaDoDia(dStr);
+                    });
+                    
+                    grid.appendChild(span);
+                }
+                lucide.createIcons();
+            }
+
+            renderizarCalendario();
+
+            // Load Other Stats
+            try {
+                const me = await window.api.getMe();
+                document.getElementById('profile-name').textContent = me.nome;
+                document.getElementById('avatar-initial').textContent = me.nome.charAt(0).toUpperCase();
+
+                const userRole = (me.role || '').toUpperCase();
+                if (userRole === 'ADMIN' || userRole === 'MEDICO' || userRole === 'RECEPTIONIST') {
+                    const pacResponse = await window.api.getPacientes(0, 10);
+                    const el = document.getElementById('stat-pacientes');
+                    if (el) el.textContent = pacResponse.total;
+                }
+
+                if (userRole === 'ADMIN') {
+                    const medResponse = await window.api.getMedicos(0, 10);
+                    const el = document.getElementById('stat-medicos');
+                    if (el) el.textContent = medResponse.total;
+                }
+
+            } catch (error) {
+                console.error(error);
+                showToast('Erro ao carregar dados', 'error');
+            }
+
+            // Load Agenda
+            carregarAgendaDoDia(dataStr);
+            carregarGraficoSemanaEStatus();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Médicos - ClinicFlow</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-icon">C</div>
+            <nav class="nav-menu">
+                <a href="dashboard.html" class="nav-link" data-tooltip="Dashboard">
+                    <i data-lucide="layout-dashboard"></i>
+                </a>
+                <a href="pacientes.html" class="nav-link" data-tooltip="Pacientes">
+                    <i data-lucide="users"></i>
+                </a>
+                <a href="medicos.html" class="nav-link active admin-only" data-tooltip="Médicos">
+                    <i data-lucide="stethoscope"></i>
+                </a>
+                <a href="consultas.html" class="nav-link" data-tooltip="Consultas">
+                    <i data-lucide="calendar"></i>
+                </a>
+                <a href="admin-users.html" class="nav-link admin-only" data-tooltip="Utilizadores">
+                    <i data-lucide="shield"></i>
+                </a>
+            </nav>
+            <div class="sidebar-bottom">
+                <a href="#" class="nav-link" data-tooltip="Sair" onclick="logout()">
+                    <i data-lucide="log-out"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-area" style="grid-column: 2 / span 2;">
+            <header class="main-header">
+                <div class="welcome-text">
+                    <h1>Médicos</h1>
+                    <p>Gestão do corpo clínico e especialidades.</p>
+                </div>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <button class="btn btn-primary" id="openModalBtn">
+                        <i data-lucide="plus" style="width:16px;height:16px;"></i> Novo Médico
+                    </button>
+                    <button class="btn-icon"><i data-lucide="bell"></i></button>
+                </div>
+            </header>
+
+            <div class="content-panel">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>CRM</th>
+                                <th>Especialidade</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="medicos-table-body">
+                            <tr><td colspan="4" style="text-align: center;">Carregando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination-container" id="pagination-medicos"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Novo Médico -->
+    <div class="modal-overlay" id="medicoModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>Novo Médico</h3>
+                <button class="modal-close"><i data-lucide="x"></i></button>
+            </div>
+            <form id="formMedico">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Nome Completo</label>
+                        <input type="text" id="m_nome" class="form-control" required placeholder="Nome do Médico">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">E-mail</label>
+                        <input type="email" id="m_email" class="form-control" required placeholder="medico@exemplo.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Senha</label>
+                        <input type="password" id="m_senha" class="form-control" required placeholder="Senha de acesso">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Especialidade</label>
+                        <select id="m_especialidade_id" class="form-control" required>
+                            <option value="">Carregando especialidades...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">CRM</label>
+                        <input type="text" id="m_crm" class="form-control" required placeholder="CRM-XX 00000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Telefone</label>
+                        <input type="text" id="m_telefone" class="form-control" placeholder="(00) 00000-0000">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary modal-close-btn">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        lucide.createIcons();
+
+        const limit = 10;
+        let currentPage = 1;
+
+        async function carregarMedicos(pagina = 1) {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            currentPage = pagina;
+            const skip = (pagina - 1) * limit;
+
+            try {
+                const response = await window.api.getMedicos(skip, limit);
+                const medicos = response.items;
+                const total = response.total;
+
+                const tbody = document.getElementById('medicos-table-body');
+                tbody.innerHTML = '';
+                
+                if (medicos.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Nenhum médico cadastrado.</td></tr>';
+                } else {
+                    medicos.forEach(m => {
+                        const tr = document.createElement('tr');
+                        const statusClass = m.user.is_active ? 'success' : 'error';
+                        const statusText = m.user.is_active ? 'Ativo' : 'Inativo';
+                        
+                        tr.innerHTML = `
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--secondary); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold;">
+                                        ${m.user.nome.charAt(0).toUpperCase()}
+                                    </div>
+                                    <span style="font-weight: 500; color: var(--text-main);">${m.user.nome}</span>
+                                </div>
+                            </td>
+                            <td>${m.crm}</td>
+                            <td>${m.especialidade}</td>
+                            <td><span class="badge badge-${statusClass}">${statusText}</span></td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+                window.renderPagination('pagination-medicos', total, limit, currentPage, carregarMedicos);
+            } catch (error) {
+                console.error(error);
+                showToast('Erro ao carregar médicos', 'error');
+            }
+        }
+
+        async function carregarEspecialidades() {
+            try {
+                const resp = await window.api.getEspecialidades();
+                const sel = document.getElementById('m_especialidade_id');
+                sel.innerHTML = '<option value="">Selecione uma especialidade...</option>';
+                if (resp && resp.length) {
+                    resp.forEach(e => {
+                        const opt = document.createElement('option');
+                        opt.value = e.id;
+                        opt.textContent = e.nome;
+                        sel.appendChild(opt);
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarMedicos();
+            carregarEspecialidades();
+        });
+
+        // Modal Logic
+        const modal = document.getElementById('medicoModal');
+        const openBtn = document.getElementById('openModalBtn');
+        const closeBtns = document.querySelectorAll('.modal-close, .modal-close-btn');
+
+        if (openBtn) {
+            openBtn.addEventListener('click', () => modal.classList.add('active'));
+        }
+        
+        closeBtns.forEach(btn => btn.addEventListener('click', () => {
+            modal.classList.remove('active');
+            document.getElementById('formMedico').reset();
+        }));
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.classList.remove('active');
+        });
+
+        document.getElementById('formMedico').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            try {
+                // 1. Criar o usuário base
+                const userData = {
+                    nome: document.getElementById('m_nome').value,
+                    email: document.getElementById('m_email').value,
+                    senha: document.getElementById('m_senha').value,
+                    role: 'MEDICO',
+                    ativo: true
+                };
+                const userResp = await window.api.register(userData);
+
+                // 2. Criar o médico vinculado ao ID retornado
+                const medData = {
+                    usuario_id: userResp.id,
+                    especialidade_id: parseInt(document.getElementById('m_especialidade_id').value),
+                    crm: document.getElementById('m_crm').value,
+                    telefone: document.getElementById('m_telefone').value
+                };
+                
+                await window.api.createMedico(medData);
+                showToast('Médico criado com sucesso!', 'success');
+                modal.classList.remove('active');
+                e.target.reset();
+                setTimeout(() => window.location.reload(), 1000);
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        });
+    </script>
+</body>
+</html>

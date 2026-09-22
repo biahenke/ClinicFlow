@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultas - ClinicFlow</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-icon">C</div>
+            <nav class="nav-menu">
+                <a href="dashboard.html" class="nav-link" data-tooltip="Dashboard">
+                    <i data-lucide="layout-dashboard"></i>
+                </a>
+                <a href="pacientes.html" class="nav-link" data-tooltip="Pacientes">
+                    <i data-lucide="users"></i>
+                </a>
+                <a href="medicos.html" class="nav-link admin-only" data-tooltip="Médicos">
+                    <i data-lucide="stethoscope"></i>
+                </a>
+                <a href="consultas.html" class="nav-link active" data-tooltip="Consultas">
+                    <i data-lucide="calendar"></i>
+                </a>
+                <a href="admin-users.html" class="nav-link admin-only" data-tooltip="Utilizadores">
+                    <i data-lucide="shield"></i>
+                </a>
+            </nav>
+            <div class="sidebar-bottom">
+                <a href="#" class="nav-link" data-tooltip="Sair" onclick="logout()">
+                    <i data-lucide="log-out"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-area" style="grid-column: 2 / span 2;">
+            <header class="main-header">
+                <div class="welcome-text">
+                    <h1>Consultas</h1>
+                    <p>Agendamentos e histórico de atendimentos.</p>
+                </div>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <button class="btn btn-primary" id="openModalBtn">
+                        <i data-lucide="calendar-plus" style="width:16px;height:16px;"></i> Agendar Consulta
+                    </button>
+                    <button class="btn-icon"><i data-lucide="bell"></i></button>
+                </div>
+            </header>
+
+            <div class="content-panel">
+                <div class="filters-bar" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; background: #fff; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                    <input type="date" id="filter-data" class="form-control" style="flex: 1; min-width: 140px;">
+                    <input type="text" id="filter-paciente" class="form-control" placeholder="Buscar Paciente..." style="flex: 1; min-width: 160px;">
+                    <input type="text" id="filter-medico" class="form-control" placeholder="Buscar Médico..." style="flex: 1; min-width: 160px;">
+                    <select id="filter-especialidade" class="form-control" style="flex: 1; min-width: 160px;">
+                        <option value="">Especialidade...</option>
+                        <option value="Cardiologia">Cardiologia</option>
+                        <option value="Dermatologia">Dermatologia</option>
+                        <option value="Ortopedia">Ortopedia</option>
+                        <option value="Pediatria">Pediatria</option>
+                        <option value="Ginecologia">Ginecologia</option>
+                        <option value="Neurologia">Neurologia</option>
+                    </select>
+                    <select id="filter-status" class="form-control" style="flex: 1; min-width: 140px;">
+                        <option value="">Todos os Status</option>
+                        <option value="agendada">Agendada</option>
+                        <option value="realizada">Realizada</option>
+                        <option value="nao realizada">Não Realizada</option>
+                        <option value="cancelada">Cancelada</option>
+                    </select>
+                    <button class="btn btn-primary" id="btn-filtrar" style="flex: 0 0 auto;">Filtrar</button>
+                    <button class="btn btn-secondary" id="btn-limpar" style="flex: 0 0 auto; background: transparent; color: var(--text-muted); border: 1px solid var(--border-color);">Limpar</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Data e Hora</th>
+                                <th>Paciente</th>
+                                <th>Médico</th>
+                                <th>Especialidade</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="consultas-table-body">
+                            <tr><td colspan="5" style="text-align: center;">Carregando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination-container" id="pagination-consultas"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Nova Consulta -->
+    <div class="modal-overlay" id="consultaModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>Agendar Consulta</h3>
+                <button class="modal-close"><i data-lucide="x"></i></button>
+            </div>
+            <form id="formConsulta">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Paciente</label>
+                        <input type="text" id="c_paciente_input" list="lista-pacientes" class="form-control" required placeholder="Digite o nome ou CPF...">
+                        <datalist id="lista-pacientes"></datalist>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Médico</label>
+                        <input type="text" id="c_medico_input" list="lista-medicos" class="form-control" required placeholder="Digite o nome ou CRM...">
+                        <datalist id="lista-medicos"></datalist>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Data</label>
+                        <input type="date" id="c_data" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Horário</label>
+                        <input type="time" id="c_horario" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Observação</label>
+                        <input type="text" id="c_observacao" class="form-control" placeholder="Alguma observação extra?">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary modal-close-btn">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Agendar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        lucide.createIcons();
+
+        // Control UI visibility based on RBAC role
+        const tokenInfo = localStorage.getItem('token');
+        let userRole = null;
+        if (tokenInfo) {
+            try {
+                const payload = JSON.parse(atob(tokenInfo.split('.')[1]));
+                userRole = payload.role;
+                if (payload.role === 'medico') {
+                    document.getElementById('filter-medico').style.display = 'none';
+                    // Seletor de especialidade também é inútil para o médico (só vê as dele)
+                    document.getElementById('filter-especialidade').style.display = 'none';
+                } else if (payload.role === 'paciente') {
+                    document.getElementById('filter-paciente').style.display = 'none';
+                    document.getElementById('openModalBtn').style.display = 'none'; // Pacientes geralmente não agendam sozinhos aqui, ou se agendarem, esconde o seu input
+                }
+            } catch(e) {}
+        }
+
+        const limit = 10;
+        let currentPage = 1;
+
+        async function carregarConsultas(pagina = 1) {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            currentPage = pagina;
+            const skip = (pagina - 1) * limit;
+
+            const filters = {};
+            const dataVal = document.getElementById('filter-data').value;
+            if (dataVal) filters.data = dataVal;
+            
+            const pacVal = document.getElementById('filter-paciente').value;
+            if (pacVal) filters.paciente = pacVal;
+            
+            const medVal = document.getElementById('filter-medico').value;
+            if (medVal) filters.medico = medVal;
+            
+            const espVal = document.getElementById('filter-especialidade').value;
+            if (espVal) filters.especialidade = espVal;
+            
+            const statusVal = document.getElementById('filter-status').value;
+            if (statusVal) filters.status = statusVal;
+
+            try {
+                const response = await window.api.getConsultas(skip, limit, filters);
+                const consultas = response.items;
+                const total = response.total;
+
+                const tbody = document.getElementById('consultas-table-body');
+                tbody.innerHTML = '';
+                
+                if (consultas.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhuma consulta encontrada.</td></tr>';
+                } else {
+                    const statusColorMap = {
+                        "agendada": "status-agendada",
+                        "realizada": "status-realizada",
+                        "cancelada": "status-cancelada",
+                        "nao realizada": "status-nao-realizada"
+                    };
+
+                    consultas.forEach(c => {
+                        const tr = document.createElement('tr');
+                        const cssClass = statusColorMap[c.status] || 'badge-warning';
+                        
+                        tr.innerHTML = `
+                            <td>
+                                <div style="font-weight: 500; color: var(--text-main);">${c.data.split('-').reverse().join('/')}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">${c.horario.substring(0,5)}</div>
+                            </td>
+                            <td>${c.paciente.user.nome}</td>
+                            <td>${c.medico.user.nome}</td>
+                            <td>${c.medico.especialidade}</td>
+                            <td><span class="badge ${cssClass}">${c.status}</span></td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+                window.renderPagination('pagination-consultas', total, limit, currentPage, carregarConsultas);
+            } catch (error) {
+                console.error(error);
+                showToast('Erro ao carregar consultas', 'error');
+            }
+        }
+
+        let mapPacientes = {};
+        let mapMedicos = {};
+
+        async function carregarOpcoesSelects() {
+            try {
+                const pacResponse = await window.api.getPacientes(0, 1000);
+                const listPacientes = document.getElementById('lista-pacientes');
+                if (pacResponse && pacResponse.items) {
+                    pacResponse.items.forEach(p => {
+                        const text = `${p.usuario.nome} - CPF: ${p.cpf}`;
+                        mapPacientes[text] = p.id;
+                        const opt = document.createElement('option');
+                        opt.value = text;
+                        listPacientes.appendChild(opt);
+                    });
+                }
+
+                const medResponse = await window.api.getMedicos(0, 1000);
+                const listMedicos = document.getElementById('lista-medicos');
+                if (medResponse && medResponse.items) {
+                    medResponse.items.forEach(m => {
+                        const text = `${m.usuario.nome} - ${m.especialidade.nome}`;
+                        mapMedicos[text] = m.id;
+                        const opt = document.createElement('option');
+                        opt.value = text;
+                        listMedicos.appendChild(opt);
+                    });
+                }
+            } catch (error) {
+                console.error("Erro ao carregar opções do modal:", error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarConsultas();
+            carregarOpcoesSelects();
+
+            document.getElementById('btn-filtrar').addEventListener('click', () => {
+                carregarConsultas(1);
+            });
+            
+            document.getElementById('btn-limpar').addEventListener('click', () => {
+                document.getElementById('filter-data').value = '';
+                document.getElementById('filter-paciente').value = '';
+                document.getElementById('filter-medico').value = '';
+                document.getElementById('filter-especialidade').value = '';
+                document.getElementById('filter-status').value = '';
+                carregarConsultas(1);
+            });
+        });
+
+        // Modal Logic
+        const modal = document.getElementById('consultaModal');
+        const openBtn = document.getElementById('openModalBtn');
+        const closeBtns = document.querySelectorAll('.modal-close, .modal-close-btn');
+
+        if (openBtn) {
+            openBtn.addEventListener('click', () => modal.classList.add('active'));
+        }
+        
+        closeBtns.forEach(btn => btn.addEventListener('click', () => {
+            modal.classList.remove('active');
+            document.getElementById('formConsulta').reset();
+        }));
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.classList.remove('active');
+        });
+
+        document.getElementById('formConsulta').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const pacText = document.getElementById('c_paciente_input').value;
+            const medText = document.getElementById('c_medico_input').value;
+            
+            const paciente_id = mapPacientes[pacText];
+            const medico_id = mapMedicos[medText];
+            
+            if (!paciente_id) return showToast('Paciente não encontrado na lista', 'error');
+            if (!medico_id) return showToast('Médico não encontrado na lista', 'error');
+
+            const data = {
+                paciente_id: paciente_id,
+                medico_id: medico_id,
+                data: document.getElementById('c_data').value,
+                horario: document.getElementById('c_horario').value,
+                observacao: document.getElementById('c_observacao').value
+            };
+
+            try {
+                await window.api.createConsulta(data);
+                showToast('Consulta agendada com sucesso!', 'success');
+                modal.classList.remove('active');
+                e.target.reset();
+                setTimeout(() => window.location.reload(), 1000);
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        });
+    </script>
+</body>
+</html>
