@@ -1,32 +1,32 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  /* Colors - Premium SaaS Medical Theme */
-  --bg-main: #F4F7FE; /* Cinza/Azul muito claro */
-  --bg-surface: #FFFFFF;
+  /* Colors - Premium SaaS Medical Theme (Dark Mode) */
+  --bg-main: #11131e; /* Dark background */
+  --bg-surface: #1e1f35; /* Cards background */
   
-  --primary: #4318FF; /* Azul Destaque */
-  --primary-light: #E9EDF7; /* Fundo de destaque leve */
-  --primary-hover: #3311cc;
+  --primary: #4f46e5; /* Indigo */
+  --primary-light: rgba(99, 102, 241, 0.2); 
+  --primary-hover: #4338ca;
   
-  --panel-bg: #2B3674; /* Fundo Painel Direito - Crítico */
+  --panel-bg: #1e1f35; 
   --panel-text: #FFFFFF;
   --panel-border: rgba(255, 255, 255, 0.1);
   --panel-card-bg: rgba(255, 255, 255, 0.05);
   
-  --text-main: #1B2559; /* Cor principal do texto */
-  --text-muted: #A3AED0; /* Textos secundários */
-  --text-light: #A3AED0;
+  --text-main: #ffffff; /* White text for readability */
+  --text-muted: #94a3b8; /* Slate 400 */
+  --text-light: #cbd5e1; /* Slate 300 */
   
-  --border: #E2E8F0;
+  --border: #3f425c;
   
   /* Status Colors */
-  --success-bg: #def7ec;
-  --success-text: #05cd99;
-  --warning-bg: #fff5eb;
-  --warning-text: #ffb547;
-  --error-bg: #fee2e2;
-  --error-text: #ee5d50;
+  --success-bg: rgba(16, 185, 129, 0.2);
+  --success-text: #10b981;
+  --warning-bg: rgba(245, 158, 11, 0.2);
+  --warning-text: #f59e0b;
+  --error-bg: rgba(239, 68, 68, 0.2);
+  --error-text: #ef4444;
   
   /* Layout & Styling */
   --radius-sm: 8px;
@@ -290,8 +290,9 @@ a:hover { color: var(--primary-hover); }
 /* Chart Bars */
 .chart-bar {
   flex: 1;
+  max-width: 40px;
   background: var(--primary);
-  border-radius: 8px 8px 8px 8px; /* Arredonde os cantos das barras */
+  border-radius: 8px;
   transition: height 0.3s;
 }
 .chart-bar.secondary {
@@ -448,7 +449,7 @@ a:hover { color: var(--primary-hover); }
   font-weight: 500;
   text-transform: uppercase;
   color: var(--text-muted);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 .table td {
@@ -456,7 +457,7 @@ a:hover { color: var(--primary-hover); }
   font-size: 0.9rem;
   font-weight: 500;
   color: var(--text-main);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
   vertical-align: middle;
 }
 
@@ -693,7 +694,7 @@ body[data-role="medico"] .admin-only {
 
 .modal-header {
   padding: 1.5rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;

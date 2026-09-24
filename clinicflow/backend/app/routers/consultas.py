@@ -156,12 +156,19 @@ async def get_consulta(consulta_id: int, db: AsyncSession = Depends(get_db), _=D
 
 @router.post("/", response_model=schemas.ConsultaOut, status_code=201)
 async def create_consulta(data: schemas.ConsultaCreate, db: AsyncSession = Depends(get_db), _=Depends(get_current_user)):
-    r = await db.execute(select(models.Medico).where(models.Medico.id == data.medico_id))
-    if not r.scalar_one_or_none():
+    r_medico = await db.execute(select(models.Medico).where(models.Medico.id == data.medico_id))
+    medico = r_medico.scalar_one_or_none()
+    if not medico:
         raise HTTPException(status_code=404, detail="Médico não encontrado")
-    r = await db.execute(select(models.Paciente).where(models.Paciente.id == data.paciente_id))
-    if not r.scalar_one_or_none():
+    
+    r_paciente = await db.execute(select(models.Paciente).where(models.Paciente.id == data.paciente_id))
+    paciente = r_paciente.scalar_one_or_none()
+    if not paciente:
         raise HTTPException(status_code=404, detail="Paciente não encontrado")
+
+    if medico.especialidade and "ginecologia" in medico.especialidade.lower():
+        if paciente.genero and paciente.genero.lower() in ["m", "male", "masculino"]:
+            raise HTTPException(status_code=400, detail="Consultas de Ginecologia não são permitidas para pacientes do sexo masculino")
 
     consulta = models.Consulta(
         medico_id=data.medico_id,
@@ -186,6 +193,32 @@ async def update_consulta(consulta_id: int, data: schemas.ConsultaUpdate, db: As
     for field, value in data.model_dump(exclude_none=True).items():
         setattr(consulta, field, value)
 
+    await db.commit()
+    await db.refresh(consulta)
+    return consulta
+
+
+@router.patch("/{consulta_id}/status", response_model=schemas.ConsultaOut)
+async def update_consulta_status(consulta_id: int, data: schemas.ConsultaStatusUpdate, db: AsyncSession = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    valid_statuses = ['agendada', 'cancelada', 'nao realizada', 'realizada']
+    if data.status not in valid_statuses:
+        raise HTTPException(status_code=400, detail="Status inválido")
+
+    result = await db.execute(select(models.Consulta).where(models.Consulta.id == consulta_id))
+    consulta = result.scalar_one_or_none()
+    if not consulta:
+        raise HTTPException(status_code=404, detail="Consulta não encontrada")
+
+    # RBAC validation
+    if current_user.role == 'medico' or current_user.role == 'doctor':
+        result_medico = await db.execute(select(models.Medico).where(models.Medico.user_id == current_user.id))
+        medico_profile = result_medico.scalar_one_or_none()
+        if not medico_profile or consulta.medico_id != medico_profile.id:
+            raise HTTPException(status_code=403, detail="Acesso negado. Você só pode alterar suas próprias consultas.")
+    elif current_user.role not in ['admin', 'receptionist']:
+        raise HTTPException(status_code=403, detail="Acesso negado. Você não tem permissão para alterar o status.")
+
+    consulta.status = data.status
     await db.commit()
     await db.refresh(consulta)
     return consulta
