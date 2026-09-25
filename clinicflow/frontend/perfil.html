@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil e Segurança - Clínica Vida</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; background-color: #0b1221; color: #94a3b8; }
+    
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    
+    .sidebar-item { padding: 0.75rem 1rem; border-radius: 0.75rem; display: flex; align-items: center; gap: 1rem; font-weight: 500; transition: 0.3s; color: #cbd5e1; margin: 0 1rem; }
+    .sidebar-item:hover { background: rgba(255,255,255,0.05); color: white; }
+    .sidebar-item.active { background: linear-gradient(90deg, #3b82f6, #2563eb); color: white; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+    
+    .stat-card { background: #131c31; border: 1px solid #1e293b; border-radius: 1rem; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; }
+    .dark-card { background: #131c31; border-radius: 1rem; border: 1px solid #1e293b; padding: 1.5rem; }
+    
+    .table-dark th { color: #94a3b8; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; padding-bottom: 1rem; text-align: left; border-bottom: 1px solid #1e293b; }
+    .table-dark td { padding: 1rem 0; font-size: 0.85rem; color: #cbd5e1; border-bottom: 1px solid #1e293b; }
+    .table-dark tr:last-child td { border-bottom: none; }
+    
+    .calendar-day { font-size: 0.85rem; display: flex; align-items: center; justify-content: center; height: 28px; width: 28px; cursor: pointer; transition: 0.2s; border-radius: 50%; color: #94a3b8; margin: 0 auto; }
+    .calendar-day:hover { background: rgba(255,255,255,0.1); color: white; }
+    .calendar-day.active { background: #3b82f6 !important; color: white !important; font-weight: 700; box-shadow: 0 0 10px rgba(59,130,246,0.5); }
+    
+    .donut-chart {
+      width: 160px; height: 160px; border-radius: 50%;
+      background: conic-gradient(#2dd4bf 0% 34%, #3b82f6 34% 83%, #f59e0b 83% 91%, #64748b 91% 100%);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .donut-inner { width: 110px; height: 110px; border-radius: 50%; background: #131c31; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  </style>
+</head>
+<body class="h-screen overflow-hidden flex">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="group w-[80px] hover:w-[260px] transition-all duration-300 bg-[#0e1628] border-r border-[#1e293b] flex flex-col shrink-0 z-50 h-full overflow-hidden">
+    <div class="h-24 flex items-center px-6 overflow-hidden">
+      <div class="flex items-center">
+        <i class="ph-fill ph-heartbeat text-4xl text-blue-500 shrink-0"></i>
+        <div class="flex flex-col">
+          <span class="max-w-0 opacity-0 group-hover:max-w-[200px] group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap group-hover:ml-3 text-white font-bold text-xl leading-tight">Clínica Vida</span><span class="max-w-0 opacity-0 group-hover:max-w-[200px] group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap group-hover:ml-3 text-[0.65rem] text-slate-400 font-semibold tracking-widest">GESTÃO DE SAÚDE</span>
+        </div>
+      </div>
+    </div>
+    
+    <nav class="flex flex-col gap-2 mt-4 flex-1">
+      <a href="dashboard.html" class="sidebar-item"><i class="ph ph-house text-xl shrink-0"></i> <span class="max-w-0 opacity-0 group-hover:max-w-[200px] group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap group-hover:ml-3 flex-1">Início</span></a>
+      <a href="pacientes.html" class="sidebar-item"><i class="ph ph-users text-xl shrink-0"></i> <span class="max-w-0 opacity-0 group-hover:max-w-[200px] group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap group-hover:ml-3 flex-1">Pacientes</span></a>
+      <a href="medicos.html" class="sidebar-item"><i class="ph ph-user-circle-plus text-xl shrink-0"></i> <span class="max-w-0 opacity-0 group-hover:max-w-[200px] group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap group-hover:ml-3 flex-1">Médicos</span></a>
+      <a href="consultas.html" class="sidebar-item"><i class="ph ph-calendar-plus text-xl shrink-0"></i> <span class="max-w-0 opacity-0 group-hover:max-w-[200px] group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap group-hover:ml-3 flex-1">Consultas</span></a>
+      
+      <a href="relatorios.html" class="sidebar-item"><i class="ph ph-chart-bar text-xl shrink-0"></i> <span class="max-w-0 opacity-0 group-hover:max-w-[200px] group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap group-hover:ml-3 flex-1">Relatórios</span></a>
+      <a href="perfil.html" class="sidebar-item active"><i class="ph ph-user text-xl shrink-0"></i> <span class="max-w-0 opacity-0 group-hover:max-w-[200px] group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap group-hover:ml-3 flex-1">Perfil</span></a>
+    </nav>
+    
+    <div class="p-6">
+      <a href="#" class="sidebar-item !mx-0 !px-0 flex items-center gap-3">
+        <i class="ph ph-headset text-2xl text-slate-400 shrink-0"></i>
+        <div class="flex flex-col">
+          <span class="text-white font-medium text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Suporte</span>
+          <span class="text-xs text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Precisa de ajuda?</span>
+        </div>
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN AREA -->
+  <div class="flex-1 flex flex-col overflow-hidden ">
+    
+    <!-- TOP HEADER -->
+    <header class="h-20 px-8 flex items-center justify-end shrink-0">
+      <div class="flex items-center gap-6">
+        <button class="relative text-slate-400 hover:text-white transition">
+          <i class="ph ph-bell text-2xl shrink-0"></i>
+        </button>
+        <div class="flex items-center gap-3 border-l border-[#1e293b] pl-6 cursor-pointer">
+          <div class="w-10 h-10 rounded-full bg-cyan-400 text-slate-900 flex items-center justify-center font-bold text-lg" id="avatar-initial">U</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="flex-1 overflow-y-auto p-8 pt-2 flex flex-col gap-6 relative">
+      <div class="flex justify-between items-center shrink-0">
+        <div>
+          <h1 class="text-3xl font-bold text-white tracking-tight">Perfil e Segurança</h1>
+          <p class="text-sm text-slate-400 mt-1">Gerencie seus dados pessoais e senha de acesso.</p>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
+        
+        <!-- DADOS PESSOAIS -->
+        <div class="dark-card flex flex-col gap-4">
+          <h2 class="text-xl font-bold text-white mb-2"><i class="ph ph-identification-card text-sky-400 mr-2"></i>Dados Pessoais</h2>
+          <form id="formPerfil" class="flex flex-col gap-4">
+            <div>
+              <label class="form-label">Nome Completo</label>
+              <input type="text" id="perfil_nome" class="form-control" required>
+            </div>
+            <div>
+              <label class="form-label">E-mail</label>
+              <input type="email" id="perfil_email" class="form-control" required>
+            </div>
+            <div>
+                <label class="form-label">Role (Apenas Leitura)</label>
+                <input type="text" id="perfil_role" class="form-control bg-opacity-50" readonly disabled>
+              </div>
+            <div class="mt-4 flex justify-end">
+              <button type="submit" class="btn-primary flex items-center gap-2"><i class="ph ph-floppy-disk"></i> Salvar Dados</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- SEGURANÇA -->
+        <div class="dark-card flex flex-col gap-4">
+          <h2 class="text-xl font-bold text-white mb-2"><i class="ph ph-lock-key text-rose-400 mr-2"></i>Segurança</h2>
+          <form id="formSenha" class="flex flex-col gap-4">
+            <div>
+              <label class="form-label">Senha Atual</label>
+              <input type="password" id="senha_atual" class="form-control" required>
+            </div>
+            <div>
+              <label class="form-label">Nova Senha</label>
+              <input type="password" id="nova_senha" class="form-control" required>
+            </div>
+            <div>
+              <label class="form-label">Confirmar Nova Senha</label>
+              <input type="password" id="confirma_senha" class="form-control" required>
+              <span id="senha_erro" class="text-xs text-rose-400 mt-1 hidden">As senhas não coincidem.</span>
+            </div>
+            <div class="mt-4 flex justify-end">
+              <button type="submit" class="btn-primary flex items-center gap-2" style="background: #f43f5e;"><i class="ph ph-shield-check"></i> Alterar Senha</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </main>
+  </div>
+  
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const user = await window.api.getMe();
+            document.getElementById('perfil_nome').value = user.nome;
+            document.getElementById('perfil_email').value = user.email;
+            document.getElementById('perfil_role').value = user.role.toUpperCase();
+            document.getElementById('avatar-initial').textContent = user.nome.charAt(0).toUpperCase();
+        } catch (error) {
+            console.error(error);
+            showToast('Erro ao carregar perfil', 'error');
+        }
+
+        document.getElementById('formPerfil').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nome = document.getElementById('perfil_nome').value;
+            const email = document.getElementById('perfil_email').value;
+
+            try {
+                await window.api.updateMe({ nome, email });
+                showToast('Perfil atualizado com sucesso', 'success');
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        });
+
+        const senhaAtual = document.getElementById('senha_atual');
+        const novaSenha = document.getElementById('nova_senha');
+        const confirmaSenha = document.getElementById('confirma_senha');
+        const senhaErro = document.getElementById('senha_erro');
+
+        const validatePasswords = () => {
+            if (novaSenha.value && confirmaSenha.value && novaSenha.value !== confirmaSenha.value) {
+                senhaErro.classList.remove('hidden');
+                return false;
+            } else {
+                senhaErro.classList.add('hidden');
+                return true;
+            }
+        };
+
+        novaSenha.addEventListener('input', validatePasswords);
+        confirmaSenha.addEventListener('input', validatePasswords);
+
+        document.getElementById('formSenha').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!validatePasswords()) {
+                showToast('As senhas não coincidem', 'error');
+                return;
+            }
+
+            try {
+                await window.api.changePassword({
+                    current_password: senhaAtual.value,
+                    new_password: novaSenha.value,
+                    confirm_password: confirmaSenha.value
+                });
+                showToast('Senha alterada com sucesso', 'success');
+                senhaAtual.value = '';
+                novaSenha.value = '';
+                confirmaSenha.value = '';
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        });
+    });
+  </script>
+</body>
+</html>

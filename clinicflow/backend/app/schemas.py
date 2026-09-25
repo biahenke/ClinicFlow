@@ -41,6 +41,15 @@ class UserUpdate(BaseModel):
     is_active: Optional[bool] = None
     password: Optional[str] = None
 
+class UserProfileUpdate(BaseModel):
+    nome: Optional[str] = None
+    email: Optional[EmailStr] = None
+
+class ChangePassword(BaseModel):
+    current_password: str
+    new_password: str
+    confirm_password: str
+
 class UserList(BaseModel):
     items: list[UserOut]
     total: int
@@ -54,6 +63,15 @@ class MedicoCreate(BaseModel):
     crm: str
     especialidade: str
     telefone: Optional[str] = None
+
+
+class MedicoUpdate(BaseModel):
+    nome: Optional[str] = None
+    email: Optional[EmailStr] = None
+    crm: Optional[str] = None
+    especialidade: Optional[str] = None
+    telefone: Optional[str] = None
+
 
 
 class MedicoOut(BaseModel):
@@ -78,6 +96,16 @@ class PacienteCreate(BaseModel):
     endereco: Optional[str] = None
     genero: Optional[str] = None
 
+
+
+class PacienteUpdate(BaseModel):
+    nome: Optional[str] = None
+    email: Optional[EmailStr] = None
+    cpf: Optional[str] = None
+    data_nascimento: Optional[date] = None
+    telefone: Optional[str] = None
+    endereco: Optional[str] = None
+    genero: Optional[str] = None
 
 class PacienteOut(BaseModel):
     id: int

@@ -71,6 +71,51 @@ async def create_paciente(data: schemas.PacienteCreate, db: AsyncSession = Depen
     return paciente
 
 
+
+@router.put("/{paciente_id}", response_model=schemas.PacienteOut)
+async def update_paciente(paciente_id: int, data: schemas.PacienteUpdate, db: AsyncSession = Depends(get_db), _=Depends(require_admin)):
+    result = await db.execute(select(models.Paciente).where(models.Paciente.id == paciente_id))
+    paciente = result.scalar_one_or_none()
+    if not paciente:
+        raise HTTPException(status_code=404, detail="Paciente não encontrado")
+
+    # Update User info
+    if data.nome is not None or data.email is not None:
+        user_result = await db.execute(select(models.User).where(models.User.id == paciente.user_id))
+        user = user_result.scalar_one_or_none()
+        if user:
+            if data.nome is not None:
+                user.nome = data.nome
+            if data.email is not None:
+                # check if email exists
+                if data.email != user.email:
+                    email_check = await db.execute(select(models.User).where(models.User.email == data.email))
+                    if email_check.scalar_one_or_none():
+                        raise HTTPException(status_code=400, detail="Email já cadastrado")
+                user.email = data.email
+
+    if data.cpf is not None:
+        # check if cpf exists
+        if data.cpf != paciente.cpf:
+            cpf_check = await db.execute(select(models.Paciente).where(models.Paciente.cpf == data.cpf))
+            if cpf_check.scalar_one_or_none():
+                raise HTTPException(status_code=400, detail="CPF já cadastrado")
+        paciente.cpf = data.cpf
+        
+    if data.data_nascimento is not None:
+        paciente.data_nascimento = data.data_nascimento
+    if data.telefone is not None:
+        paciente.telefone = data.telefone
+    if data.endereco is not None:
+        paciente.endereco = data.endereco
+    if data.genero is not None:
+        paciente.genero = data.genero
+
+    await db.commit()
+    await db.refresh(paciente)
+    await db.refresh(paciente, attribute_names=["user"])
+    return paciente
+
 @router.delete("/{paciente_id}", status_code=204)
 async def delete_paciente(paciente_id: int, db: AsyncSession = Depends(get_db), _=Depends(require_admin)):
     result = await db.execute(select(models.Paciente).where(models.Paciente.id == paciente_id))

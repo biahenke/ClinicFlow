@@ -68,6 +68,44 @@ async def create_medico(data: schemas.MedicoCreate, db: AsyncSession = Depends(g
     return medico
 
 
+@router.put("/{medico_id}", response_model=schemas.MedicoOut)
+async def update_medico(medico_id: int, data: schemas.MedicoUpdate, db: AsyncSession = Depends(get_db), _=Depends(require_admin)):
+    result = await db.execute(select(models.Medico).where(models.Medico.id == medico_id))
+    medico = result.scalar_one_or_none()
+    if not medico:
+        raise HTTPException(status_code=404, detail="Médico não encontrado")
+
+    if data.nome is not None or data.email is not None:
+        user_result = await db.execute(select(models.User).where(models.User.id == medico.user_id))
+        user = user_result.scalar_one_or_none()
+        if user:
+            if data.nome is not None:
+                user.nome = data.nome
+            if data.email is not None:
+                if data.email != user.email:
+                    email_check = await db.execute(select(models.User).where(models.User.email == data.email))
+                    if email_check.scalar_one_or_none():
+                        raise HTTPException(status_code=400, detail="Email já cadastrado")
+                user.email = data.email
+
+    if data.crm is not None:
+        if data.crm != medico.crm:
+            crm_check = await db.execute(select(models.Medico).where(models.Medico.crm == data.crm))
+            if crm_check.scalar_one_or_none():
+                raise HTTPException(status_code=400, detail="CRM já cadastrado")
+        medico.crm = data.crm
+        
+    if data.especialidade is not None:
+        medico.especialidade = data.especialidade
+    if data.telefone is not None:
+        medico.telefone = data.telefone
+
+    await db.commit()
+    await db.refresh(medico)
+    await db.refresh(medico, attribute_names=["user"])
+    return medico
+
+
 @router.delete("/{medico_id}", status_code=204)
 async def delete_medico(medico_id: int, db: AsyncSession = Depends(get_db), _=Depends(require_admin)):
     result = await db.execute(select(models.Medico).where(models.Medico.id == medico_id))

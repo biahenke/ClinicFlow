@@ -4,7 +4,7 @@ from sqlalchemy import select
 from fastapi.security import OAuth2PasswordRequestForm
 from app.database import get_db
 from app import models, schemas
-from app.auth import verify_password, create_access_token
+from app.auth import verify_password, create_access_token, get_password_hash
 from app.dependencies import get_current_user
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -26,3 +26,20 @@ async def login(data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = 
 @router.get("/me", response_model=schemas.UserOut)
 async def me(current_user: models.User = Depends(get_current_user)):
     return current_user
+
+
+@router.put("/change-password")
+async def change_password(
+    data: schemas.ChangePassword,
+    current_user: models.User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    if not verify_password(data.current_password, current_user.hashed_password):
+        raise HTTPException(status_code=400, detail="Password atual incorreta")
+    
+    if data.new_password != data.confirm_password:
+        raise HTTPException(status_code=400, detail="As passwords não coincidem")
+        
+    current_user.hashed_password = get_password_hash(data.new_password)
+    await db.commit()
+    return {"detail": "Password alterada com sucesso"}
