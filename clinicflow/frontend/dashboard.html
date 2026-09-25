@@ -1,390 +1,312 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - ClinicFlow</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="https://unpkg.com/lucide@latest"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - ClinicFlow</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; background-color: #171728; color: #94a3b8; }
+    .sidebar-bg { background-color: #1a1a2e; border-right: 1px solid rgba(255,255,255,0.03); }
+    .panel-bg { background-color: #1e1e32; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+    
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    
+    .table th { color: #94a3b8 !important; border-bottom: 1px solid rgba(255,255,255,0.05) !important; padding: 1.25rem 1rem !important; text-transform: uppercase; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-align: left;}
+    .table td { color: white !important; border-bottom: 1px solid rgba(255,255,255,0.03) !important; padding: 1.25rem 1rem !important; font-size: 0.85rem; font-weight: 500;}
+    .table tbody tr:hover { background-color: rgba(255,255,255,0.02) !important; }
+    
+    .form-control { background: #171728 !important; border: 1px solid rgba(255,255,255,0.05) !important; color: white !important; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.85rem;}
+    .form-control:focus { border-color: #4f46e5 !important; outline: none; }
+    
+    .btn-primary { background: #4f46e5 !important; color: white !important; border: none !important; padding: 0.6rem 1.2rem; border-radius: 99px; font-weight: 600; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.5rem;}
+    .btn-primary:hover { background: #4338ca !important; }
+    .btn-secondary { background: #171728 !important; color: white !important; border: 1px solid rgba(255,255,255,0.1) !important; padding: 0.6rem 1.2rem; border-radius: 99px; font-weight: 600; font-size: 0.85rem;}
+    .btn-secondary:hover { background: rgba(255,255,255,0.05) !important; }
+    
+    .modal-container { background: #1e1e32 !important; color: #e2e8f0 !important; border: 1px solid rgba(255,255,255,0.05) !important; border-radius: 16px;}
+    .modal-header { border-bottom: 1px solid rgba(255,255,255,0.05) !important; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;}
+    .modal-footer { border-top: 1px solid rgba(255,255,255,0.05) !important; background: transparent !important; padding: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem;}
+    
+    .content-panel { background: #1e1e32 !important; border-radius: 1rem !important; padding: 1rem !important; }
+    
+    .badge-success { background: #d1fae5; color: #065f46; font-size: 0.7rem; padding: 0.2rem 0.6rem; border-radius: 99px; font-weight: 600;}
+    .badge-error { background: #fee2e2; color: #991b1b; font-size: 0.7rem; padding: 0.2rem 0.6rem; border-radius: 99px; font-weight: 600;}
+  </style>
 </head>
-<body>
-    <div class="app-container has-right-panel">
-        <!-- Sidebar -->
-        <div class="sidebar-wrapper">
-            <aside class="sidebar">
-                <div class="logo-icon">C</div>
-                <nav class="nav-menu">
-                    <a href="dashboard.html" class="nav-link active" data-tooltip="Dashboard">
-                        <i data-lucide="layout-dashboard" stroke-width="1.5"></i>
-                    </a>
-                    <a href="pacientes.html" class="nav-link" data-tooltip="Pacientes">
-                        <i data-lucide="users" stroke-width="1.5"></i>
-                    </a>
-                    <a href="medicos.html" class="nav-link admin-only" data-tooltip="Médicos">
-                        <i data-lucide="stethoscope" stroke-width="1.5"></i>
-                    </a>
-                    <a href="consultas.html" class="nav-link" data-tooltip="Consultas">
-                        <i data-lucide="calendar" stroke-width="1.5"></i>
-                    </a>
-                    <a href="admin-users.html" class="nav-link admin-only" data-tooltip="Utilizadores">
-                        <i data-lucide="shield" stroke-width="1.5"></i>
-                    </a>
-                </nav>
-                <div class="sidebar-bottom">
-                    <a href="#" class="nav-link" data-tooltip="Sair" onclick="logout()">
-                        <i data-lucide="log-out" stroke-width="1.5"></i>
-                    </a>
-                </div>
-            </aside>
+<body class="h-screen overflow-hidden flex">
+
+  <!-- 1. BARRA LATERAL ESQUERDA -->
+      <aside class="group w-[80px] hover:w-[240px] sidebar-bg flex flex-col justify-between shrink-0 z-50 h-full overflow-hidden transition-all duration-300 absolute md:relative">
+    <div class="flex flex-col w-[240px]">
+      <div class="h-24 flex items-center px-6 mt-2">
+        <div class="w-10 h-10 shrink-0 rounded-full bg-[#4f46e5] flex items-center justify-center font-bold text-white text-xl">
+          C
         </div>
-
-        <!-- Main Content -->
-        <main class="main-area">
-            
-            <div class="welcome-banner">
-                <div class="welcome-text">
-                    <h1>Olá, <span id="user-name">Usuário</span></h1>
-                    <p>Tenha um ótimo dia. Aqui está o resumo da clínica.</p>
-                </div>
-                <div style="display: flex; gap: 1rem; align-items: center;">
-                    <button class="btn-icon"><i data-lucide="bell" stroke-width="1.5"></i></button>
-                </div>
-            </div>
-
-            <div class="summary-cards">
-                <div class="summary-card">
-                    <div class="summary-icon"><i data-lucide="users" stroke-width="1.5"></i></div>
-                    <div class="summary-info">
-                        <span class="summary-title">Pacientes Cadastrados</span>
-                        <div class="summary-value" id="stat-pacientes">--</div>
-                    </div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-icon"><i data-lucide="calendar-check" stroke-width="1.5"></i></div>
-                    <div class="summary-info">
-                        <span class="summary-title">Consultas Hoje</span>
-                        <div class="summary-value" id="stat-consultas">--</div>
-                    </div>
-                </div>
-                <div class="summary-card admin-only">
-                    <div class="summary-icon"><i data-lucide="activity" stroke-width="1.5"></i></div>
-                    <div class="summary-info">
-                        <span class="summary-title">Médicos Ativos</span>
-                        <div class="summary-value" id="stat-medicos">--</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="content-grid">
-                <div class="content-panel">
-                    <div class="panel-header">
-                        <h3 class="panel-title">Consultas da Semana</h3>
-                        <button class="btn-icon" style="width:32px; height:32px;"><i data-lucide="more-horizontal"></i></button>
-                    </div>
-                    <!-- Chart area with no gridlines and rounded bars -->
-                    <div id="grafico-semana" style="height: 180px; display: flex; align-items: flex-end; justify-content: space-around; gap: 1rem; padding-top: 1rem;">
-                        <!-- JS fará o append das barras -->
-                    </div>
-                    <div style="display: flex; justify-content: space-around; margin-top: 1rem; color: var(--text-muted); font-size: 0.8rem; font-weight: 500;">
-                        <span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span>
-                    </div>
-                </div>
-
-                <div class="content-panel">
-                    <div class="panel-header">
-                        <h3 class="panel-title">Status da Semana</h3>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
-                        <div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-                                <span style="font-size: 0.875rem; color: var(--text-muted); font-weight: 500;">Realizadas</span>
-                                <span style="font-weight: 700; color: var(--text-main);" id="status-realizadas-text">0%</span>
-                            </div>
-                            <div style="background: var(--bg-main); height: 6px; border-radius: 4px;"><div id="status-realizadas-bar" style="background: var(--success-text); width: 0%; height: 100%; border-radius: 4px; transition: width 0.5s ease;"></div></div>
-                        </div>
-                        
-                        <div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-                                <span style="font-size: 0.875rem; color: var(--text-muted); font-weight: 500;">Agendadas</span>
-                                <span style="font-weight: 700; color: var(--text-main);" id="status-agendadas-text">0%</span>
-                            </div>
-                            <div style="background: var(--bg-main); height: 6px; border-radius: 4px;"><div id="status-agendadas-bar" style="background: var(--warning-text); width: 0%; height: 100%; border-radius: 4px; transition: width 0.5s ease;"></div></div>
-                        </div>
-
-                        <div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-                                <span style="font-size: 0.875rem; color: var(--text-muted); font-weight: 500;">Canceladas</span>
-                                <span style="font-weight: 700; color: var(--text-main);" id="status-canceladas-text">0%</span>
-                            </div>
-                            <div style="background: var(--bg-main); height: 6px; border-radius: 4px;"><div id="status-canceladas-bar" style="background: var(--error-text); width: 0%; height: 100%; border-radius: 4px; transition: width 0.5s ease;"></div></div>
-                        </div>
-
-                        <div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-                                <span style="font-size: 0.875rem; color: var(--text-muted); font-weight: 500;">Não Realizadas</span>
-                                <span style="font-weight: 700; color: var(--text-main);" id="status-nao-realizadas-text">0%</span>
-                            </div>
-                            <div style="background: var(--bg-main); height: 6px; border-radius: 4px;"><div id="status-nao-realizadas-bar" style="background: #a0aec0; width: 0%; height: 100%; border-radius: 4px; transition: width 0.5s ease;"></div></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Right Panel (Dark) -->
-        <div class="right-panel-wrapper">
-            <aside class="right-panel">
-                <div class="user-profile">
-                    <div class="avatar" id="avatar-initial">U</div>
-                    <div class="user-info">
-                        <h4 id="profile-name">Carregando...</h4>
-                        <p id="user-role">Role</p>
-                    </div>
-                </div>
-
-                <div class="dark-card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; color: white; font-weight: 700;" id="calendar-header"></div>
-                    <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; text-align: center;" id="calendar-grid"></div>
-                </div>
-
-                <div>
-                    <h4 id="agenda-title" style="font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem;">Agenda do Dia</h4>
-                    <div class="agenda-list" id="agenda-list-body">
-                        <div style="text-align: center; color: rgba(255,255,255,0.7); font-size: 0.875rem;">Carregando...</div>
-                    </div>
-                </div>
-            </aside>
-        </div>
+      </div>
+      <nav class="flex flex-col gap-2 mt-4">
+        <a href="dashboard.html" class="py-3 rounded-lg flex items-center gap-4 font-medium transition-all duration-300 mx-3 px-3 bg-[#4f46e5] text-white">
+          <i class="ph ph-house text-xl shrink-0"></i> 
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Início</span>
+        </a>
+        <a href="pacientes.html" class="py-3 rounded-lg flex items-center gap-4 font-medium transition-all duration-300 mx-3 px-3 text-slate-400 hover:text-white">
+          <i class="ph ph-user text-xl shrink-0"></i> 
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Pacientes</span>
+        </a>
+        <a href="medicos.html" class="py-3 rounded-lg flex items-center gap-4 font-medium transition-all duration-300 mx-3 px-3 text-slate-400 hover:text-white admin-only">
+          <i class="ph ph-stethoscope text-xl shrink-0"></i> 
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Médicos</span>
+        </a>
+        <a href="consultas.html" class="py-3 rounded-lg flex items-center gap-4 font-medium transition-all duration-300 mx-3 px-3 text-slate-400 hover:text-white">
+          <i class="ph ph-calendar-blank text-xl shrink-0"></i> 
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Consultas</span>
+        </a>
+        <a href="admin-users.html" class="py-3 rounded-lg flex items-center gap-4 font-medium transition-all duration-300 mx-3 px-3 text-slate-400 hover:text-white admin-only">
+          <i class="ph ph-shield text-xl shrink-0"></i> 
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Admin</span>
+        </a>
+      </nav>
     </div>
+    <div class="p-4 mb-4 w-[240px]">
+      <button class="w-[calc(100%-1.5rem)] px-3 py-3 rounded-lg text-slate-400 hover:text-white flex items-center gap-4 font-medium transition mx-3" onclick="logout()">
+        <i class="ph ph-sign-out text-xl shrink-0"></i> 
+        <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Sair</span>
+      </button>
+    </div>
+  </aside>
 
-    <script src="js/api.js"></script>
-    <script src="js/auth.js"></script>
-    <script>
-        lucide.createIcons();
+  <!-- 2. CONTEÚDO PRINCIPAL -->
+  <main class="flex-1 flex flex-col p-8 overflow-y-auto gap-4 relative">
+    
+    <!-- Cabeçalho -->
+        <header class="flex justify-between items-center mb-8 px-2 mt-4">
+      <div>
+        <h1 class="text-3xl font-bold text-white tracking-tight">Olá, Administrador</h1>
+        <p class="text-sm text-slate-400 mt-2">Tenha um ótimo dia. Aqui está o resumo da clínica.</p>
+      </div>
+      <div class="flex items-center gap-4">
+        
+        <button class="w-10 h-10 rounded-full bg-[#1e1e32] border border-slate-700 flex items-center justify-center text-slate-300 hover:text-white transition">
+          <i class="ph ph-bell text-lg"></i>
+        </button>
+      </div>
+    </header>
 
-        async function carregarAgendaDoDia(dataAtual) {
-            const token = localStorage.getItem('token');
-            const agendaBody = document.getElementById('agenda-list-body');
-            const consultasHojeEl = document.getElementById('stat-consultas');
+    <!-- Métricas -->
+    <section class="grid grid-cols-3 gap-6">
+      
+      <!-- Card 1 -->
+      <div class="panel-bg rounded-[1.25rem] p-6 flex flex-col relative overflow-hidden border border-slate-800/50 h-[140px]">
+        <div class="flex items-center gap-3 z-10 mb-2">
+          <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
+            <i class="ph-fill ph-users text-xl"></i>
+          </div>
+          <span class="text-sm font-medium text-slate-300">Pacientes Cadastrados</span>
+        </div>
+        <div class="flex items-center gap-4 z-10 mt-1">
+          <div class="text-[2.5rem] font-bold text-white leading-none">305</div>
+          <div class="flex flex-col">
+            <span class="text-emerald-400 text-xs font-bold flex items-center gap-1"><i class="ph ph-arrow-up text-xs"></i> +12%</span>
+            <span class="text-[10px] text-slate-400 mt-0.5">em relação ao mês anterior</span>
+          </div>
+        </div>
+        <!-- Wave -->
+        <svg class="wave-bg text-blue-600" preserveAspectRatio="none" viewBox="0 0 1440 320"><path fill="none" stroke="currentColor" stroke-width="6" d="M0,160L48,170.7C96,181,192,203,288,213.3C384,224,480,224,576,213.3C672,203,768,181,864,170.7C960,160,1056,160,1152,176C1248,192,1344,224,1392,240L1440,256"></path></svg>
+      </div>
+      
+      <!-- Card 2 -->
+      <div class="panel-bg rounded-[1.25rem] p-6 flex flex-col relative overflow-hidden border border-slate-800/50 h-[140px]">
+        <div class="flex items-center gap-3 z-10 mb-2">
+          <div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400">
+            <i class="ph-fill ph-calendar-check text-xl"></i>
+          </div>
+          <span class="text-sm font-medium text-slate-300">Consultas Hoje</span>
+        </div>
+        <div class="flex items-center gap-4 z-10 mt-1">
+          <div class="text-[2.5rem] font-bold text-white leading-none">17</div>
+          <div class="flex flex-col">
+            <span class="text-emerald-400 text-xs font-bold flex items-center gap-1"><i class="ph ph-arrow-up text-xs"></i> +6%</span>
+            <span class="text-[10px] text-slate-400 mt-0.5">em relação ao mesmo dia da semana passada</span>
+          </div>
+        </div>
+        <!-- Wave -->
+        <svg class="wave-bg text-purple-600" preserveAspectRatio="none" viewBox="0 0 1440 320"><path fill="none" stroke="currentColor" stroke-width="6" d="M0,192L48,208C96,224,192,256,288,250.7C384,245,480,203,576,186.7C672,171,768,181,864,197.3C960,213,1056,235,1152,240C1248,245,1344,235,1392,229.3L1440,224"></path></svg>
+      </div>
+      
+      <!-- Card 3 -->
+      <div class="panel-bg rounded-[1.25rem] p-6 flex flex-col relative overflow-hidden border border-slate-800/50 h-[140px]">
+        <div class="flex items-center gap-3 z-10 mb-2">
+          <div class="w-10 h-10 rounded-full bg-teal-500/20 flex items-center justify-center text-teal-400">
+            <i class="ph-fill ph-heartbeat text-xl"></i>
+          </div>
+          <span class="text-sm font-medium text-slate-300">Médicos Ativos</span>
+        </div>
+        <div class="flex items-center gap-4 z-10 mt-1">
+          <div class="text-[2.5rem] font-bold text-white leading-none">35</div>
+          <div class="flex flex-col">
+            <span class="text-emerald-400 text-xs font-bold flex items-center gap-1"><i class="ph ph-arrow-up text-xs"></i> +3%</span>
+            <span class="text-[10px] text-slate-400 mt-0.5">em relação ao mês anterior</span>
+          </div>
+        </div>
+        <!-- Wave -->
+        <svg class="wave-bg text-teal-400" preserveAspectRatio="none" viewBox="0 0 1440 320"><path fill="none" stroke="currentColor" stroke-width="6" d="M0,256L48,245.3C96,235,192,213,288,218.7C384,224,480,256,576,256C672,256,768,224,864,208C960,192,1056,192,1152,208C1248,224,1344,256,1392,272L1440,288"></path></svg>
+      </div>
+    </section>
+
+    <!-- Gráficos -->
+    <section class="grid grid-cols-12 gap-6 flex-1 min-h-[340px]">
+      
+      <!-- Consultas da Semana -->
+      <div class="col-span-8 panel-bg rounded-[1.25rem] p-6 flex flex-col border border-slate-800/50">
+        <div class="flex justify-between items-center mb-8">
+          <div class="flex items-center gap-2">
+            <i class="ph-fill ph-chart-bar text-xl text-indigo-400"></i>
+            <h3 class="font-bold text-base text-white">Consultas da Semana</h3>
+          </div>
+          <button class="bg-slate-800/60 border border-slate-700/50 rounded-lg px-3 py-1.5 text-xs text-slate-300 flex items-center gap-2 hover:text-white">
+            Últimos 5 dias <i class="ph ph-caret-down"></i>
+          </button>
+        </div>
+        
+        <div class="flex-1 relative flex">
+          <!-- Y Axis -->
+          <div class="flex flex-col justify-between text-[11px] text-slate-500 pr-4 pb-8 h-full">
+            <span>40</span>
+            <span>30</span>
+            <span>20</span>
+            <span>10</span>
+            <span>0</span>
+          </div>
+          
+          <!-- Grid lines -->
+          <div class="absolute inset-0 left-8 bottom-8 flex flex-col justify-between pointer-events-none">
+            <div class="w-full border-t border-slate-700/30"></div>
+            <div class="w-full border-t border-slate-700/30"></div>
+            <div class="w-full border-t border-slate-700/30"></div>
+            <div class="w-full border-t border-slate-700/30"></div>
+            <div class="w-full border-t border-slate-700/30"></div>
+          </div>
+          
+          <!-- Chart area -->
+          <div class="flex-1 flex items-end justify-around relative z-10 pb-8 pl-4 h-full">
+            <!-- Seg -->
+            <div class="w-20 h-[65%] bar-chart bar-blue flex justify-center shadow-lg shadow-blue-500/20">
+              <span class="chart-label">26</span>
+            </div>
+            <!-- Ter -->
+            <div class="w-20 h-[75%] bar-chart bar-purple flex justify-center shadow-lg shadow-purple-500/20">
+              <span class="chart-label">30</span>
+            </div>
+            <!-- Qua -->
+            <div class="w-20 h-[42.5%] bar-chart bar-light-purple flex justify-center shadow-lg shadow-purple-400/20">
+              <span class="chart-label">17</span>
+            </div>
+            <!-- Sex -->
+            <div class="w-20 h-[60%] bar-chart bar-teal flex justify-center shadow-lg shadow-teal-500/20">
+              <span class="chart-label">24</span>
+            </div>
             
-            agendaBody.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.7); font-size: 0.875rem;">Carregando...</div>';
-
-            try {
-                // Fetch com o parametro data para trazer apenas as da data e ja ordenadas asc
-                const response = await fetch(`http://localhost:8000/api/consultas/?skip=0&limit=1000&data=${dataAtual}`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                
-                if(!response.ok) throw new Error('Erro na resposta');
-                const data = await response.json();
-                
-                const consultasHoje = data.items;
-                
-                // Filter out canceled appointments for the dashboard count
-                const countNaoCanceladas = consultasHoje.filter(c => !["cancelada", "canceladas", "nao realizada", "falta"].includes(c.status?.toLowerCase())).length;
-                
-                if (consultasHojeEl) consultasHojeEl.textContent = countNaoCanceladas;
-
-                agendaBody.innerHTML = '';
-                if (consultasHoje.length === 0) {
-                    agendaBody.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.7); font-size: 0.875rem;">Nenhuma consulta para este dia.</div>';
-                } else {
-                    consultasHoje.forEach(c => {
-                        const div = document.createElement('div');
-                        div.className = 'agenda-item';
-                        div.innerHTML = `
-                            <div class="agenda-time">${c.horario.substring(0,5)}</div>
-                            <div class="agenda-details">
-                                <h5>${c.paciente.user.nome}</h5>
-                                <p>${c.medico.user.nome} - ${c.medico.especialidade}</p>
-                            </div>
-                        `;
-                        agendaBody.appendChild(div);
-                    });
-                }
-            } catch (error) {
-                console.error(error);
-                agendaBody.innerHTML = '<div style="text-align: center; color: #F56565; font-size: 0.875rem;">Erro ao buscar agenda.</div>';
-                if (consultasHojeEl) consultasHojeEl.textContent = "--";
-            }
-        }
-
-        async function carregarGraficoSemanaEStatus() {
-            const token = localStorage.getItem('token');
-            const chartContainer = document.getElementById('grafico-semana');
-            if(!chartContainer) return;
+            <!-- SVG Line Overlay -->
+            <svg class="absolute inset-0 w-full h-full pointer-events-none pb-8 pl-4" preserveAspectRatio="none">
+              <!-- Approximately mapped points for 65%, 75%, 42.5%, 60% heights -->
+              <!-- Height runs from 0 (top) to 100% (bottom). So 65% height is 35% from top. -->
+              <path d="M 12.5%,35% Q 25%,30% 37.5%,25% T 62.5%,57.5% T 87.5%,40%" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"></path>
+              <circle cx="12.5%" cy="35%" r="3" fill="#fff" stroke="#3b82f6" stroke-width="2"></circle>
+              <circle cx="37.5%" cy="25%" r="3" fill="#fff" stroke="#8b5cf6" stroke-width="2"></circle>
+              <circle cx="62.5%" cy="57.5%" r="3" fill="#fff" stroke="#a78bfa" stroke-width="2"></circle>
+              <circle cx="87.5%" cy="40%" r="3" fill="#fff" stroke="#2dd4bf" stroke-width="2"></circle>
+            </svg>
             
-            try {
-                // Gráfico da Semana
-                const response = await fetch(`http://localhost:8000/api/consultas/estatisticas/semana`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                
-                if(response.ok) {
-                    const data = await response.json();
-                    const valores = data.dados_semana;
-                    
-                    const maxVal = Math.max(...valores, 1);
-                    chartContainer.innerHTML = '';
-                    
-                    const hojeDiaSemana = new Date().getDay(); 
-                    const indexHoje = hojeDiaSemana - 1; 
-                    
-                    valores.forEach((val, index) => {
-                        const perc = (val / maxVal) * 100;
-                        const cssClass = index === indexHoje ? 'chart-bar' : 'chart-bar secondary';
-                        chartContainer.innerHTML += `
-                            <div class="${cssClass}" style="height: ${perc}%; position: relative;" title="${val} consultas">
-                                <span style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: 600; color: var(--text-main);">${val}</span>
-                            </div>`;
-                    });
-                }
+          </div>
+          
+          <!-- X Axis Labels -->
+          <div class="absolute bottom-0 left-8 right-0 flex justify-around text-xs text-slate-400 pt-3 pl-4">
+            <span class="w-20 text-center font-medium">Seg</span>
+            <span class="w-20 text-center font-medium">Ter</span>
+            <span class="w-20 text-center font-medium">Qua</span>
+            <span class="w-20 text-center font-medium">Sex</span>
+          </div>
+        </div>
+      </div>
 
-                // Status (Realizadas, Agendadas, Canceladas)
-                const resStatus = await fetch(`http://localhost:8000/api/consultas/estatisticas/status`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
+      <!-- Status da Semana -->
+      <div class="col-span-4 panel-bg rounded-[1.25rem] p-6 flex flex-col border border-slate-800/50">
+        <div class="flex items-center gap-2 mb-8">
+          <i class="ph-fill ph-chart-pie-slice text-xl text-indigo-400"></i>
+          <h3 class="font-bold text-base text-white">Status da Semana</h3>
+        </div>
+        
+        <div class="space-y-7 mt-2">
+          <!-- Realizadas -->
+          <div>
+            <div class="flex justify-between text-xs font-semibold mb-2"><span class="text-slate-300">Realizadas</span><span class="text-white">34%</span></div>
+            <div class="h-2.5 bg-slate-800/60 rounded-full overflow-hidden"><div class="h-full bg-teal-400 rounded-full w-[34%] shadow-[0_0_10px_rgba(45,212,191,0.5)]"></div></div>
+          </div>
+          <!-- Agendadas -->
+          <div>
+            <div class="flex justify-between text-xs font-semibold mb-2"><span class="text-slate-300">Agendadas</span><span class="text-white">49%</span></div>
+            <div class="h-2.5 bg-slate-800/60 rounded-full overflow-hidden"><div class="h-full bg-amber-400 rounded-full w-[49%] shadow-[0_0_10px_rgba(251,191,36,0.5)]"></div></div>
+          </div>
+          <!-- Canceladas -->
+          <div>
+            <div class="flex justify-between text-xs font-semibold mb-2"><span class="text-slate-300">Canceladas</span><span class="text-white">8%</span></div>
+            <div class="h-2.5 bg-slate-800/60 rounded-full overflow-hidden"><div class="h-full bg-rose-500 rounded-full w-[8%] shadow-[0_0_10px_rgba(244,63,94,0.5)]"></div></div>
+          </div>
+          <!-- Não Realizadas -->
+          <div>
+            <div class="flex justify-between text-xs font-semibold mb-2"><span class="text-slate-300">Não Realizadas</span><span class="text-white">8%</span></div>
+            <div class="h-2.5 bg-slate-800/60 rounded-full overflow-hidden"><div class="h-full bg-slate-500 rounded-full w-[8%]"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-                if(resStatus.ok) {
-                    const dataStatus = await resStatus.json();
-                    document.getElementById('status-realizadas-text').textContent = dataStatus.realizadas + '%';
-                    document.getElementById('status-realizadas-bar').style.width = dataStatus.realizadas + '%';
+  </main>
 
-                    document.getElementById('status-agendadas-text').textContent = dataStatus.agendadas + '%';
-                    document.getElementById('status-agendadas-bar').style.width = dataStatus.agendadas + '%';
+  <!-- 3. PAINEL DIREITO -->
+      <aside class="group w-[80px] hover:w-[240px] sidebar-bg flex flex-col justify-between shrink-0 z-50 h-full overflow-hidden transition-all duration-300 absolute md:relative">
+    <div class="flex flex-col w-[240px]">
+      <div class="h-24 flex items-center px-6 mt-2">
+        <div class="w-10 h-10 shrink-0 rounded-full bg-[#4f46e5] flex items-center justify-center font-bold text-white text-xl">
+          C
+        </div>
+      </div>
+      <nav class="flex flex-col gap-2 mt-4">
+        <a href="dashboard.html" class="py-3 rounded-lg flex items-center gap-4 font-medium transition-all duration-300 mx-3 px-3 bg-[#4f46e5] text-white">
+          <i class="ph ph-house text-xl shrink-0"></i> 
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Início</span>
+        </a>
+        <a href="pacientes.html" class="py-3 rounded-lg flex items-center gap-4 font-medium transition-all duration-300 mx-3 px-3 text-slate-400 hover:text-white">
+          <i class="ph ph-user text-xl shrink-0"></i> 
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Pacientes</span>
+        </a>
+        <a href="medicos.html" class="py-3 rounded-lg flex items-center gap-4 font-medium transition-all duration-300 mx-3 px-3 text-slate-400 hover:text-white admin-only">
+          <i class="ph ph-stethoscope text-xl shrink-0"></i> 
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Médicos</span>
+        </a>
+        <a href="consultas.html" class="py-3 rounded-lg flex items-center gap-4 font-medium transition-all duration-300 mx-3 px-3 text-slate-400 hover:text-white">
+          <i class="ph ph-calendar-blank text-xl shrink-0"></i> 
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Consultas</span>
+        </a>
+        <a href="admin-users.html" class="py-3 rounded-lg flex items-center gap-4 font-medium transition-all duration-300 mx-3 px-3 text-slate-400 hover:text-white admin-only">
+          <i class="ph ph-shield text-xl shrink-0"></i> 
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Admin</span>
+        </a>
+      </nav>
+    </div>
+    <div class="p-4 mb-4 w-[240px]">
+      <button class="w-[calc(100%-1.5rem)] px-3 py-3 rounded-lg text-slate-400 hover:text-white flex items-center gap-4 font-medium transition mx-3" onclick="logout()">
+        <i class="ph ph-sign-out text-xl shrink-0"></i> 
+        <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Sair</span>
+      </button>
+    </div>
+  </aside>
 
-                    document.getElementById('status-canceladas-text').textContent = dataStatus.canceladas + '%';
-                    document.getElementById('status-canceladas-bar').style.width = dataStatus.canceladas + '%';
-
-                    document.getElementById('status-nao-realizadas-text').textContent = dataStatus.nao_realizadas + '%';
-                    document.getElementById('status-nao-realizadas-bar').style.width = dataStatus.nao_realizadas + '%';
-                }
-
-            } catch (error) {
-                console.error('Erro gráfico:', error);
-                chartContainer.innerHTML = '<div style="color: #F56565; font-size: 0.85rem; align-self: center; width: 100%; text-align: center;">Erro ao carregar gráfico</div>';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            const token = localStorage.getItem('token');
-            if (!token) return;
-
-            const hojeReal = new Date();
-            const dataStr = hojeReal.toISOString().split('T')[0];
-            let dataBaseCalendario = new Date();
-
-            function renderizarCalendario() {
-                const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-                
-                document.getElementById('calendar-header').innerHTML = `
-                    <span>${meses[dataBaseCalendario.getMonth()]} ${dataBaseCalendario.getFullYear()}</span>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <i id="cal-prev" data-lucide="chevron-left" style="width: 16px; height: 16px; cursor: pointer;"></i>
-                        <i id="cal-next" data-lucide="chevron-right" style="width: 16px; height: 16px; cursor: pointer;"></i>
-                    </div>
-                `;
-                
-                document.getElementById('cal-prev').addEventListener('click', () => {
-                    dataBaseCalendario.setMonth(dataBaseCalendario.getMonth() - 1);
-                    renderizarCalendario();
-                });
-                document.getElementById('cal-next').addEventListener('click', () => {
-                    dataBaseCalendario.setMonth(dataBaseCalendario.getMonth() + 1);
-                    renderizarCalendario();
-                });
-
-                const grid = document.getElementById('calendar-grid');
-                grid.innerHTML = `
-                    <span style="color: rgba(255,255,255,0.5); font-size: 0.75rem;">D</span>
-                    <span style="color: rgba(255,255,255,0.5); font-size: 0.75rem;">S</span>
-                    <span style="color: rgba(255,255,255,0.5); font-size: 0.75rem;">T</span>
-                    <span style="color: rgba(255,255,255,0.5); font-size: 0.75rem;">Q</span>
-                    <span style="color: rgba(255,255,255,0.5); font-size: 0.75rem;">Q</span>
-                    <span style="color: rgba(255,255,255,0.5); font-size: 0.75rem;">S</span>
-                    <span style="color: rgba(255,255,255,0.5); font-size: 0.75rem;">S</span>
-                `;
-                
-                const primeiroDia = new Date(dataBaseCalendario.getFullYear(), dataBaseCalendario.getMonth(), 1);
-                const ultimoDia = new Date(dataBaseCalendario.getFullYear(), dataBaseCalendario.getMonth() + 1, 0);
-                
-                // Preenche espaços vazios antes do dia 1
-                for(let i = 0; i < primeiroDia.getDay(); i++) {
-                    grid.appendChild(document.createElement('span'));
-                }
-                
-                for(let day = 1; day <= ultimoDia.getDate(); day++) {
-                    const span = document.createElement('span');
-                    span.textContent = day;
-                    span.className = 'calendar-day';
-                    span.style.cssText = "font-size: 0.85rem; display: flex; align-items: center; justify-content: center; height: 24px; cursor: pointer; transition: 0.2s;";
-                    
-                    if(day === hojeReal.getDate() && dataBaseCalendario.getMonth() === hojeReal.getMonth() && dataBaseCalendario.getFullYear() === hojeReal.getFullYear()) {
-                        span.classList.add('active');
-                        span.style.background = "var(--primary)";
-                        span.style.color = "white";
-                        span.style.borderRadius = "8px";
-                        span.style.fontWeight = "700";
-                    }
-                    
-                    span.addEventListener('click', function() {
-                        document.querySelectorAll('.calendar-day').forEach(el => {
-                            el.classList.remove('active');
-                            el.style.background = "transparent";
-                            el.style.color = "inherit";
-                            el.style.fontWeight = "normal";
-                        });
-                        
-                        this.classList.add('active');
-                        this.style.background = "var(--primary)";
-                        this.style.color = "white";
-                        this.style.borderRadius = "8px";
-                        this.style.fontWeight = "700";
-                        
-                        const m = String(dataBaseCalendario.getMonth() + 1).padStart(2, '0');
-                        const d = String(day).padStart(2, '0');
-                        const y = dataBaseCalendario.getFullYear();
-                        const dStr = `${y}-${m}-${d}`;
-                        
-                        document.getElementById('agenda-title').textContent = `Agenda: ${d}/${m}/${y}`;
-                        carregarAgendaDoDia(dStr);
-                    });
-                    
-                    grid.appendChild(span);
-                }
-                lucide.createIcons();
-            }
-
-            renderizarCalendario();
-
-            // Load Other Stats
-            try {
-                const me = await window.api.getMe();
-                document.getElementById('profile-name').textContent = me.nome;
-                document.getElementById('avatar-initial').textContent = me.nome.charAt(0).toUpperCase();
-
-                const userRole = (me.role || '').toUpperCase();
-                if (userRole === 'ADMIN' || userRole === 'MEDICO' || userRole === 'RECEPTIONIST') {
-                    const pacResponse = await window.api.getPacientes(0, 10);
-                    const el = document.getElementById('stat-pacientes');
-                    if (el) el.textContent = pacResponse.total;
-                }
-
-                if (userRole === 'ADMIN') {
-                    const medResponse = await window.api.getMedicos(0, 10);
-                    const el = document.getElementById('stat-medicos');
-                    if (el) el.textContent = medResponse.total;
-                }
-
-            } catch (error) {
-                console.error(error);
-                showToast('Erro ao carregar dados', 'error');
-            }
-
-            // Load Agenda
-            carregarAgendaDoDia(dataStr);
-            carregarGraficoSemanaEStatus();
-        });
-    </script>
+  <script src="js/auth.js"></script>
 </body>
 </html>

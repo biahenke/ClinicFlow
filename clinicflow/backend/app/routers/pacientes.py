@@ -61,7 +61,8 @@ async def create_paciente(data: schemas.PacienteCreate, db: AsyncSession = Depen
         cpf=data.cpf,
         data_nascimento=data.data_nascimento,
         telefone=data.telefone,
-        endereco=data.endereco
+        endereco=data.endereco,
+        genero=data.genero
     )
     db.add(paciente)
     await db.commit()

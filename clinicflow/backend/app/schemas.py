@@ -76,6 +76,7 @@ class PacienteCreate(BaseModel):
     data_nascimento: Optional[date] = None
     telefone: Optional[str] = None
     endereco: Optional[str] = None
+    genero: Optional[str] = None
 
 
 class PacienteOut(BaseModel):
@@ -84,6 +85,7 @@ class PacienteOut(BaseModel):
     data_nascimento: Optional[date]
     telefone: Optional[str]
     endereco: Optional[str]
+    genero: Optional[str]
     user: UserOut
 
     class Config:
@@ -104,6 +106,9 @@ class ConsultaUpdate(BaseModel):
     observacoes: Optional[str] = None
     data: Optional[date] = None
     horario: Optional[time] = None
+
+class ConsultaStatusUpdate(BaseModel):
+    status: str
 
 
 class ConsultaOut(BaseModel):

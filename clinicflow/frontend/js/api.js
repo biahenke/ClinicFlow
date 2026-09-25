@@ -88,6 +88,12 @@ class ApiService {
     static async createPaciente(data) { return this.request('/pacientes/', { method: 'POST', body: JSON.stringify(data) }); }
     static async createMedico(data) { return this.request('/medicos/', { method: 'POST', body: JSON.stringify(data) }); }
     static async createConsulta(data) { return this.request('/consultas/', { method: 'POST', body: JSON.stringify(data) }); }
+    static async updateConsultaStatus(id, status) { 
+        return this.request(`/consultas/${id}/status`, { 
+            method: 'PATCH', 
+            body: JSON.stringify({ status }) 
+        }); 
+    }
 
     // Admin Users
     static async getUsers(skip=0, limit=10, role='') { 

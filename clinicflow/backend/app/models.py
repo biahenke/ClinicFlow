@@ -42,6 +42,7 @@ class Paciente(Base):
     data_nascimento = Column(Date)
     telefone = Column(String(20))
     endereco = Column(Text)
+    genero = Column(String(20))
     created_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="paciente", lazy="selectin")

@@ -209,8 +209,8 @@ async def seed():
                         delta = -random.randint(1, 90)
                         status = random.choices(["realizada", "cancelada", "nao realizada"], weights=[0.7, 0.15, 0.15])[0]
                     elif rand_crono < 0.8:
-                        # 60% Presente e Próxima semana (-2 a +14 dias)
-                        delta = random.randint(-2, 14)
+                        # 60% Presente e Próxima semana (-7 a +14 dias)
+                        delta = random.randint(-7, 14)
                         if delta < 0:
                             status = random.choices(["realizada", "cancelada", "nao realizada"], weights=[0.7, 0.15, 0.15])[0]
                         elif delta == 0:
