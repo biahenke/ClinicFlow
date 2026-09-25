@@ -4,7 +4,7 @@ from sqlalchemy import select, func, or_, update
 from app.database import get_db
 from app import models, schemas
 from app.auth import get_password_hash
-from app.dependencies import require_admin
+from app.dependencies import require_admin, get_current_user
 from typing import Optional
 from pydantic import BaseModel
 
@@ -19,6 +19,30 @@ class UserCreateFull(schemas.UserCreate):
     endereco: Optional[str] = None
 
 router = APIRouter(prefix="/users", tags=["Users"])
+
+@router.get("/me", response_model=schemas.UserOut)
+async def get_me(current_user: models.User = Depends(get_current_user)):
+    return current_user
+
+@router.put("/me", response_model=schemas.UserOut)
+async def update_me(
+    data: schemas.UserProfileUpdate,
+    current_user: models.User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    if data.email and data.email != current_user.email:
+        email_check = await db.execute(select(models.User).where(models.User.email == data.email))
+        if email_check.scalar_one_or_none():
+            raise HTTPException(status_code=400, detail="Email já cadastrado")
+            
+    if data.nome is not None:
+        current_user.nome = data.nome
+    if data.email is not None:
+        current_user.email = data.email
+        
+    await db.commit()
+    await db.refresh(current_user)
+    return current_user
 
 @router.get("/", response_model=schemas.UserList)
 async def get_users(

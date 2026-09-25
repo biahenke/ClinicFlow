@@ -68,7 +68,15 @@ class ApiService {
     }
 
     static async getMe() {
-        return this.request('/auth/me');
+        return this.request('/users/me');
+    }
+
+    static async updateMe(data) {
+        return this.request('/users/me', { method: 'PUT', body: JSON.stringify(data) });
+    }
+
+    static async changePassword(data) {
+        return this.request('/auth/change-password', { method: 'PUT', body: JSON.stringify(data) });
     }
 
     static async getPacientes(skip=0, limit=10) { return this.request(`/pacientes/?skip=${skip}&limit=${limit}`); }
@@ -86,7 +94,9 @@ class ApiService {
     static async getHistorico(pacienteId) { return this.request(`/prontuarios/paciente/${pacienteId}`); }
 
     static async createPaciente(data) { return this.request('/pacientes/', { method: 'POST', body: JSON.stringify(data) }); }
+    static async updatePaciente(id, data) { return this.request(`/pacientes/${id}`, { method: 'PUT', body: JSON.stringify(data) }); }
     static async createMedico(data) { return this.request('/medicos/', { method: 'POST', body: JSON.stringify(data) }); }
+    static async updateMedico(id, data) { return this.request(`/medicos/${id}`, { method: 'PUT', body: JSON.stringify(data) }); }
     static async createConsulta(data) { return this.request('/consultas/', { method: 'POST', body: JSON.stringify(data) }); }
     static async updateConsultaStatus(id, status) { 
         return this.request(`/consultas/${id}/status`, { 
@@ -104,6 +114,17 @@ class ApiService {
     static async createUserAdmin(data) { return this.request('/users/', { method: 'POST', body: JSON.stringify(data) }); }
     static async updateUserAdmin(id, data) { return this.request(`/users/${id}`, { method: 'PUT', body: JSON.stringify(data) }); }
     static async deleteUserAdmin(id) { return this.request(`/users/${id}`, { method: 'DELETE' }); }
+
+    // Relatorios
+    static async getRelatoriosSummary(filters={}) { 
+        const params = new URLSearchParams();
+        if(filters.start_date) params.append('start_date', filters.start_date);
+        if(filters.end_date) params.append('end_date', filters.end_date);
+        
+        const queryString = params.toString();
+        const url = `/relatorios/summary${queryString ? '?' + queryString : ''}`;
+        return this.request(url); 
+    }
 }
 
 window.api = ApiService;
@@ -137,10 +158,10 @@ function renderPagination(containerId, totalItems, limit, currentPage, changePag
     const container = document.getElementById(containerId);
     if (!container) return;
     container.innerHTML = '';
+    container.className = 'flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border-t border-[#1e293b] text-sm text-slate-400 mt-2';
     
     if (totalItems === 0) {
         const totalDiv = document.createElement('div');
-        totalDiv.className = 'total-registros';
         totalDiv.textContent = 'Nenhum registro encontrado';
         container.appendChild(totalDiv);
         return;
@@ -150,36 +171,48 @@ function renderPagination(containerId, totalItems, limit, currentPage, changePag
     const fim = Math.min(currentPage * limit, totalItems);
 
     const totalDiv = document.createElement('div');
-    totalDiv.className = 'total-registros';
-    totalDiv.innerHTML = `Mostrando <strong>${inicio}</strong> a <strong>${fim}</strong> de <strong>${totalItems}</strong> registros`;
+    totalDiv.innerHTML = `Mostrando <strong class="text-white font-medium">${inicio}</strong> a <strong class="text-white font-medium">${fim}</strong> de <strong class="text-white font-medium">${totalItems}</strong> registros`;
     container.appendChild(totalDiv);
 
     const totalPages = Math.ceil(totalItems / limit);
     if (totalPages <= 1) return;
 
     const buttonsContainer = document.createElement('div');
-    buttonsContainer.className = 'pagination-buttons';
+    buttonsContainer.className = 'flex items-center gap-1';
 
-    const prevBtn = document.createElement('button');
-    prevBtn.className = 'page-btn';
-    prevBtn.innerHTML = '<i data-lucide="chevron-left" style="width:16px;height:16px;"></i>';
-    prevBtn.disabled = currentPage === 1;
-    prevBtn.onclick = () => changePageCallback(currentPage - 1);
+    const createBtn = (content, disabled, onClick, isActive = false) => {
+        const btn = document.createElement('button');
+        btn.innerHTML = content;
+        btn.disabled = disabled;
+        
+        let classes = 'w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium transition-all duration-200 ';
+        
+        if (isActive) {
+            classes += 'bg-sky-600 text-white shadow-lg shadow-sky-500/30';
+        } else if (disabled) {
+            classes += 'text-slate-600 cursor-not-allowed';
+        } else {
+            classes += 'text-slate-400 hover:text-white hover:bg-[#1e293b] border border-transparent hover:border-[#334155]';
+        }
+        
+        btn.className = classes;
+        if (!disabled && onClick) {
+            btn.onclick = onClick;
+        }
+        return btn;
+    };
+
+    const prevBtn = createBtn('<i class="ph ph-caret-left text-lg"></i>', currentPage === 1, () => changePageCallback(currentPage - 1));
     buttonsContainer.appendChild(prevBtn);
 
     const addPageBtn = (page) => {
-        const btn = document.createElement('button');
-        btn.className = `page-btn ${page === currentPage ? 'active' : ''}`;
-        btn.textContent = page;
-        btn.onclick = () => changePageCallback(page);
-        buttonsContainer.appendChild(btn);
+        buttonsContainer.appendChild(createBtn(page, false, () => changePageCallback(page), page === currentPage));
     };
 
     const addEllipsis = () => {
         const span = document.createElement('span');
         span.textContent = '...';
-        span.style.padding = '0 0.5rem';
-        span.style.color = 'var(--text-muted)';
+        span.className = 'text-slate-500 px-1';
         buttonsContainer.appendChild(span);
     };
 
@@ -191,14 +224,9 @@ function renderPagination(containerId, totalItems, limit, currentPage, changePag
     if (currentPage < totalPages - 2) addEllipsis();
     if (totalPages > 1) addPageBtn(totalPages);
 
-    const nextBtn = document.createElement('button');
-    nextBtn.className = 'page-btn';
-    nextBtn.innerHTML = '<i data-lucide="chevron-right" style="width:16px;height:16px;"></i>';
-    nextBtn.disabled = currentPage === totalPages;
-    nextBtn.onclick = () => changePageCallback(currentPage + 1);
+    const nextBtn = createBtn('<i class="ph ph-caret-right text-lg"></i>', currentPage === totalPages, () => changePageCallback(currentPage + 1));
     buttonsContainer.appendChild(nextBtn);
 
     container.appendChild(buttonsContainer);
-    if (window.lucide) window.lucide.createIcons();
 }
 window.renderPagination = renderPagination;

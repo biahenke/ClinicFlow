@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relatórios - Clínica Vida</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; background-color: #00111f; color: #94a3b8; }
+    
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    
+    .sidebar-item { padding: 0.75rem 1rem; border-radius: 0.75rem; display: flex; align-items: center; gap: 1rem; font-weight: 500; transition: 0.3s; color: #cbd5e1; margin: 0 1rem; }
+    .sidebar-item:hover { background: rgba(255,255,255,0.05); color: white; }
+    .sidebar-item.active { background: linear-gradient(90deg, #0ea5e9, #0284c7); color: white; font-weight: 600; box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3); }
+    
+    .stat-card { background: #002845; border: 1px solid #1e293b; border-radius: 1rem; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; }
+    .dark-card { background: #002845; border-radius: 1rem; border: 1px solid #1e293b; padding: 1.5rem; }
+    
+    .table-dark th { color: #94a3b8; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; padding-bottom: 1rem; text-align: left; border-bottom: 1px solid #1e293b; }
+    .table-dark td { padding: 1rem 0; font-size: 0.85rem; color: #cbd5e1; border-bottom: 1px solid #1e293b; }
+    .table-dark tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body class="h-screen overflow-hidden flex">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="group w-[80px] hover:w-[260px] transition-all duration-300 bg-[#001c30] border-r border-[#1e293b] flex flex-col shrink-0 z-50 h-full overflow-hidden">
+    <div class="h-24 flex items-center px-6 overflow-hidden">
+      <div class="flex items-center">
+        <i class="ph-fill ph-heartbeat text-4xl text-sky-500 shrink-0"></i>
+        <div class="flex flex-col">
+          <span class="max-w-0 opacity-0 group-hover:max-w-[200px] group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap group-hover:ml-3 text-white font-bold text-xl leading-tight">Clínica Vida</span><span class="max-w-0 opacity-0 group-hover:max-w-[200px] group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap group-hover:ml-3 text-[0.65rem] text-slate-400 font-semibold tracking-widest">GESTÃO DE SAÚDE</span>
+        </div>
+      </div>
+    </div>
+    
+          <nav class="flex flex-col gap-2 mt-4">
+        <a href="dashboard.html" class="py-3 rounded-lg flex items-center gap-4 font-medium transition-all duration-300 mx-3 px-3 text-slate-400 hover:text-white">
+          <i class="ph ph-house text-xl shrink-0"></i> 
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Início</span>
+        </a>
+        <a href="pacientes.html" class="py-3 rounded-lg flex items-center gap-4 font-medium transition-all duration-300 mx-3 px-3 text-slate-400 hover:text-white">
+          <i class="ph ph-user text-xl shrink-0"></i> 
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Pacientes</span>
+        </a>
+        <a href="medicos.html" class="py-3 rounded-lg flex items-center gap-4 font-medium transition-all duration-300 mx-3 px-3 text-slate-400 hover:text-white admin-only">
+          <i class="ph ph-stethoscope text-xl shrink-0"></i> 
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Médicos</span>
+        </a>
+        <a href="consultas.html" class="py-3 rounded-lg flex items-center gap-4 font-medium transition-all duration-300 mx-3 px-3 text-slate-400 hover:text-white">
+          <i class="ph ph-calendar-blank text-xl shrink-0"></i> 
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Consultas</span>
+        </a>
+        <a href="relatorios.html" class="py-3 rounded-lg flex items-center gap-4 font-medium transition-all duration-300 mx-3 px-3 text-slate-400 hover:text-white admin-only">
+          <i class="ph ph-chart-bar text-xl shrink-0"></i> 
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Relatórios</span>
+        </a>
+        <a href="admin-users.html" class="py-3 rounded-lg flex items-center gap-4 font-medium transition-all duration-300 mx-3 px-3 text-slate-400 hover:text-white admin-only">
+          <i class="ph ph-shield text-xl shrink-0"></i> 
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Admin</span>
+        </a>
+        <a href="perfil.html" class="py-3 rounded-lg flex items-center gap-4 font-medium transition-all duration-300 mx-3 px-3 text-slate-400 hover:text-white">
+          <i class="ph ph-user-circle text-xl shrink-0"></i> 
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Perfil</span>
+        </a>
+      </nav>
+    
+    <div class="p-6">
+      <a href="#" class="sidebar-item !mx-0 !px-0 flex items-center gap-3">
+        <i class="ph ph-headset text-2xl text-slate-400 shrink-0"></i>
+        <div class="flex flex-col">
+          <span class="text-white font-medium text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Suporte</span>
+          <span class="text-xs text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Precisa de ajuda?</span>
+        </div>
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN AREA -->
+  <div class="flex-1 flex flex-col overflow-hidden bg-[#00111f]">
+    
+    <!-- TOP HEADER -->
+    <header class="h-20 px-8 flex items-center justify-between shrink-0">
+      <h2 class="text-xl font-bold text-white">Relatórios & Analytics</h2>
+      
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-3 border-l border-[#1e293b] pl-6 cursor-pointer">
+          <div class="w-10 h-10 rounded-full bg-cyan-400 text-slate-900 flex items-center justify-center font-bold text-lg" id="avatar-initial">?</div>
+          <div class="flex flex-col">
+            <span class="text-white font-semibold text-sm" id="profile-name">Carregando...</span>
+            <span class="text-xs text-slate-400" id="profile-role">-</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="flex-1 overflow-y-auto p-8 pt-4">
+      
+      <div id="error-message" class="hidden bg-red-500/20 text-red-400 p-4 rounded-xl border border-red-500/30 mb-6">
+        <i class="ph-fill ph-warning-circle mr-2 text-lg"></i>
+        Acesso negado. Você não tem permissão para visualizar estes relatórios.
+      </div>
+
+      <!-- FILTER BAR -->
+      <div class="dark-card flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
+        <div class="flex items-center gap-4">
+          <div class="flex flex-col">
+            <label class="text-xs text-slate-400 font-medium mb-1">Data Inicial</label>
+            <input type="date" id="filter-start" class="bg-[#00111f] border border-[#1e293b] rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-sky-500 [color-scheme:dark]">
+          </div>
+          <div class="flex flex-col">
+            <label class="text-xs text-slate-400 font-medium mb-1">Data Final</label>
+            <input type="date" id="filter-end" class="bg-[#00111f] border border-[#1e293b] rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-sky-500 [color-scheme:dark]">
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="btn-this-week" class="px-3 py-1.5 rounded-lg text-sm bg-[#1e293b] hover:bg-[#334155] text-white transition">Esta Semana</button>
+          <button id="btn-last-30" class="px-3 py-1.5 rounded-lg text-sm bg-[#1e293b] hover:bg-[#334155] text-white transition">Últ. 30 dias</button>
+          <button id="btn-clear" class="px-3 py-1.5 rounded-lg text-sm bg-slate-800 hover:bg-slate-700 text-white transition">Limpar</button>
+          <button id="btn-apply-filter" class="px-4 py-1.5 rounded-lg text-sm bg-sky-600 hover:bg-sky-500 text-white font-bold shadow-lg shadow-sky-500/30 transition ml-2">Filtrar</button>
+        </div>
+      </div>
+      
+      <div id="reports-content" class="flex flex-col gap-8 hidden">
+        <!-- PERÍODO -->
+        <div>
+          <h3 class="text-white font-bold mb-4 flex items-center gap-2">
+            <i class="ph-fill ph-calendar text-xl text-sky-400"></i>
+            Resumo do Período
+          </h3>
+          <div class="grid grid-cols-3 gap-4">
+            <div class="stat-card">
+              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Passado</span>
+              <div class="text-4xl font-bold text-white mt-2" id="val-passado">0</div>
+            </div>
+            <div class="stat-card border-sky-500/30 relative overflow-hidden">
+              <div class="absolute top-0 right-0 w-32 h-32 bg-sky-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+              <span class="text-xs font-semibold text-sky-400 uppercase tracking-wide">Semana Atual</span>
+              <div class="text-4xl font-bold text-white mt-2" id="val-atual">0</div>
+            </div>
+            <div class="stat-card">
+              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Futuro (Agendadas)</span>
+              <div class="text-4xl font-bold text-white mt-2" id="val-futuro">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-8">
+            <!-- STATUS -->
+            <div class="dark-card">
+              <h3 class="text-white font-bold mb-6 flex items-center gap-2">
+                <i class="ph-fill ph-chart-pie-slice text-xl text-sky-400"></i>
+                Estatísticas por Status
+              </h3>
+              
+              <div class="flex gap-6 items-center">
+                <div class="w-1/2 h-40">
+                  <canvas id="statusChart"></canvas>
+                </div>
+                <div class="flex flex-col gap-4 w-1/2">
+                  <div class="flex justify-between items-center p-2 bg-[#001c30] rounded-lg border border-[#1e293b]">
+                    <div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div> <span class="text-xs font-medium text-slate-300">Realizada</span></div>
+                    <span class="text-sm font-bold text-white" id="stat-realizada">0</span>
+                  </div>
+                  <div class="flex justify-between items-center p-2 bg-[#001c30] rounded-lg border border-[#1e293b]">
+                    <div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-sky-500"></div> <span class="text-xs font-medium text-slate-300">Agendada</span></div>
+                    <span class="text-sm font-bold text-white" id="stat-agendada">0</span>
+                  </div>
+                  <div class="flex justify-between items-center p-2 bg-[#001c30] rounded-lg border border-[#1e293b]">
+                    <div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-red-500"></div> <span class="text-xs font-medium text-slate-300">Cancelada</span></div>
+                    <span class="text-sm font-bold text-white" id="stat-cancelada">0</span>
+                  </div>
+                  <div class="flex justify-between items-center p-2 bg-[#001c30] rounded-lg border border-[#1e293b]">
+                    <div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-slate-500"></div> <span class="text-xs font-medium text-slate-300">Não Realiz.</span></div>
+                    <span class="text-sm font-bold text-white" id="stat-nao-realizada">0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- VOLUME POR ESPECIALIDADE -->
+            <div class="dark-card">
+              <h3 class="text-white font-bold mb-4 flex items-center gap-2">
+                <i class="ph-fill ph-users-three text-xl text-sky-400"></i>
+                Volume por Especialidade
+              </h3>
+              <div class="flex flex-col gap-2 max-h-48 overflow-y-auto pr-2 py-1" id="list-especialidade">
+                <!-- JS injected -->
+              </div>
+            </div>
+        </div>
+
+        <!-- VOLUME POR MÉDICO CHART -->
+        <div class="dark-card mt-2">
+           <h3 class="text-white font-bold mb-4 flex items-center gap-2">
+             <i class="ph-fill ph-chart-bar text-xl text-sky-400"></i>
+             Consultas por Médico (Top 10)
+           </h3>
+           <div class="w-full" style="height: 320px; min-height: 320px;">
+               <canvas id="medicoChart"></canvas>
+           </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  
+  <script>
+    let statusChartInstance = null;
+    let medicoChartInstance = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // User Profile
+      try {
+        const me = await window.api.getMe();
+        if (me) {
+          document.getElementById('profile-name').textContent = me.nome;
+          document.getElementById('profile-role').textContent = me.role.charAt(0).toUpperCase() + me.role.slice(1);
+          document.getElementById('avatar-initial').textContent = me.nome.charAt(0).toUpperCase();
+        }
+      } catch (e) {
+         window.location.href = '/login.html';
+      }
+
+      setupFilters();
+      loadReports({});
+    });
+
+    function setupFilters() {
+      const startInput = document.getElementById('filter-start');
+      const endInput = document.getElementById('filter-end');
+
+      document.getElementById('btn-apply-filter').addEventListener('click', () => {
+        const filters = {};
+        if (startInput.value) filters.start_date = startInput.value;
+        if (endInput.value) filters.end_date = endInput.value;
+        loadReports(filters);
+      });
+
+      const formatLocal = (d) => {
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
+
+      document.getElementById('btn-this-week').addEventListener('click', () => {
+        const today = new Date();
+        const start = new Date(today);
+        start.setDate(today.getDate() - today.getDay());
+        const end = new Date(start);
+        end.setDate(start.getDate() + 6);
+
+        startInput.value = formatLocal(start);
+        endInput.value = formatLocal(end);
+        loadReports({ start_date: startInput.value, end_date: endInput.value });
+      });
+
+      document.getElementById('btn-last-30').addEventListener('click', () => {
+        const today = new Date();
+        const start = new Date(today);
+        start.setDate(today.getDate() - 30);
+        
+        startInput.value = formatLocal(start);
+        endInput.value = formatLocal(today);
+        loadReports({ start_date: startInput.value, end_date: endInput.value });
+      });
+
+      document.getElementById('btn-clear').addEventListener('click', () => {
+        startInput.value = '';
+        endInput.value = '';
+        loadReports({});
+      });
+    }
+
+    async function loadReports(filters) {
+      try {
+        const metrics = await window.api.getRelatoriosSummary(filters);
+        document.getElementById('reports-content').classList.remove('hidden');
+
+        // Periodo
+        if(metrics.periodo) {
+            document.getElementById('val-passado').innerText = metrics.periodo.passado || 0;
+            document.getElementById('val-atual').innerText = metrics.periodo.semana_atual || 0;
+            document.getElementById('val-futuro').innerText = metrics.periodo.futuro || 0;
+        }
+
+        // Status
+        if(metrics.status) {
+            document.getElementById('stat-realizada').innerText = metrics.status.realizada || 0;
+            document.getElementById('stat-agendada').innerText = metrics.status.agendada || 0;
+            document.getElementById('stat-cancelada').innerText = metrics.status.cancelada || 0;
+            document.getElementById('stat-nao-realizada').innerText = metrics.status.nao_realizada || 0;
+
+            const ctxStatus = document.getElementById('statusChart').getContext('2d');
+            if (statusChartInstance) statusChartInstance.destroy();
+            statusChartInstance = new Chart(ctxStatus, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Realizada', 'Agendada', 'Cancelada', 'Não Realizada'],
+                    datasets: [{
+                        data: [metrics.status.realizada, metrics.status.agendada, metrics.status.cancelada, metrics.status.nao_realizada],
+                        backgroundColor: ['#10b981', '#0ea5e9', '#ef4444', '#64748b'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        // Especialidade
+        const espList = document.getElementById('list-especialidade');
+        if(metrics.volume_especialidade) {
+            const esps = Object.entries(metrics.volume_especialidade).sort((a,b)=>b[1]-a[1]);
+            if(esps.length === 0) {
+                espList.innerHTML = '<p class="text-slate-500 text-sm">Sem dados disponíveis no período.</p>';
+            } else {
+                espList.innerHTML = esps.map(e => `
+                    <div class="flex justify-between items-center text-sm border-b border-[#1e293b] pb-2 last:border-0">
+                        <span class="text-slate-300">${e[0]}</span>
+                        <span class="font-bold text-white bg-[#001c30] border border-[#1e293b] px-2 py-0.5 rounded">${e[1]}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Medico
+        if(metrics.volume_medico) {
+            const meds = Object.entries(metrics.volume_medico).sort((a,b)=>b[1]-a[1]).slice(0, 10);
+            const labels = meds.map(m => m[0]);
+            const data = meds.map(m => m[1]);
+
+            const ctxMedico = document.getElementById('medicoChart').getContext('2d');
+            if (medicoChartInstance) medicoChartInstance.destroy();
+            medicoChartInstance = new Chart(ctxMedico, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Consultas',
+                        data: data,
+                        backgroundColor: '#0ea5e9',
+                        borderRadius: 4,
+                        maxBarThickness: 24
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 1, color: '#94a3b8', font: { family: 'Inter', size: 11 } },
+                            grid: { color: '#1e293b' },
+                            border: { display: false }
+                        },
+                        y: {
+                            ticks: { color: '#cbd5e1', font: { family: 'Inter', size: 11 }, autoSkip: false },
+                            grid: { display: false },
+                            border: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+      } catch (err) {
+        document.getElementById('error-message').classList.remove('hidden');
+      }
+    }
+  </script>
+</body>
+</html>
