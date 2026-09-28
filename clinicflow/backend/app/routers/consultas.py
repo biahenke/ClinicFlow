@@ -3,9 +3,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from typing import List, Optional
 from datetime import date, timedelta
-from app.database import get_db
-from app import models, schemas
-from app.dependencies import get_current_user
+from ..database import get_db
+from .. import models, schemas
+from ..dependencies import get_current_user
 
 router = APIRouter(prefix="/consultas", tags=["Consultas"])
 

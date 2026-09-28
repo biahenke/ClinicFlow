@@ -1,7 +1,7 @@
 import bcrypt
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
-from app.config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
+from .config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:

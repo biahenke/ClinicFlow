@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from datetime import date, timedelta
-from app.database import get_db
+from ..database import get_db
 from app import models
-from app.dependencies import get_current_user
+from ..dependencies import get_current_user
 
 router = APIRouter(prefix="/relatorios", tags=["Relatórios"])
 
