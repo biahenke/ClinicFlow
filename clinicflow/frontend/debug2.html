@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Consultas</title>
+    <style>
+        body { 
+            font-family: monospace; 
+            background: #000; 
+            color: #0f0; 
+            padding: 20px;
+            max-width: 1200px;
+        }
+        .log { 
+            margin: 5px 0; 
+            padding: 8px; 
+            background: #111; 
+            border-left: 3px solid #0f0;
+            word-wrap: break-word;
+        }
+        .error { 
+            border-left-color: #f00; 
+            color: #f00; 
+        }
+        .success {
+            border-left-color: #0f0;
+            color: #0f0;
+        }
+        button {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px 0;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #0a0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Debug: Carregamento de Consultas</h1>
+    <button onclick="testCarregar()">Testar Carregamento de Consultas</button>
+    <button onclick="location.reload()">Recarregar Página</button>
+    <button onclick="logout()">Deslogar</button>
+    
+    <h2>Logs:</h2>
+    <div id="output"></div>
+    
+    <script src="js/api.js"></script>
+    <script>
+        const out = document.getElementById('output');
+        
+        function log(msg, isError = false) {
+            const div = document.createElement('div');
+            const isSuccess = msg.includes('✓');
+            div.className = 'log' + (isError ? ' error' : isSuccess ? ' success' : '');
+            div.textContent = msg;
+            out.appendChild(div);
+            console.log(msg);
+        }
+        
+        async function testCarregar() {
+            out.innerHTML = '';
+            log('=== INICIANDO TESTE ===\n');
+            
+            log('1. Verificando token no localStorage...');
+            const token = localStorage.getItem('token');
+            if (!token) {
+                log('   ✗ NENHUM TOKEN ENCONTRADO! Faça login primeiro.', true);
+                return;
+            }
+            log('   ✓ Token encontrado');
+            
+            try {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                log(`   ✓ Role: ${payload.role}, User ID: ${payload.sub}`);
+            } catch(e) {
+                log(`   ✗ Erro ao decodificar: ${e.message}`, true);
+                return;
+            }
+            
+            log('\n2. Chamando window.api.getConsultas()...');
+            try {
+                const startTime = Date.now();
+                const response = await window.api.getConsultas(0, 10, {});
+                const duration = Date.now() - startTime;
+                
+                log(`   ✓ Requisição completada em ${duration}ms`);
+                log(`   ✓ Total: ${response.total} consultas`);
+                log(`   ✓ Items retornados: ${response.items.length}`);
+                
+                if (response.items.length > 0) {
+                    const first = response.items[0];
+                    log(`   ✓ Primeira consulta: ID=${first.id}, Data=${first.data}, Status=${first.status}`);
+                }
+                
+            } catch(e) {
+                log(`   ✗ ERRO: ${e.message}`, true);
+                log(`   ${e.stack}`, true);
+            }
+            
+            log('\n3. Tentando requisição direta via fetch...');
+            try {
+                const startTime = Date.now();
+                const response = await fetch('http://localhost:8000/api/consultas/?skip=0&limit=10', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const duration = Date.now() - startTime;
+                
+                log(`   ✓ Fetch completado em ${duration}ms (status: ${response.status})`);
+                
+                if (!response.ok) {
+                    const text = await response.text();
+                    log(`   ✗ Erro ${response.status}: ${text}`, true);
+                    return;
+                }
+                
+                const data = await response.json();
+                log(`   ✓ JSON parseado com sucesso`);
+                log(`   ✓ Total: ${data.total}, Items: ${data.items.length}`);
+                
+            } catch(e) {
+                log(`   ✗ ERRO: ${e.message}`, true);
+            }
+            
+            log('\n=== TESTE CONCLUÍDO ===');
+        }
+        
+        function logout() {
+            localStorage.removeItem('token');
+            log('✓ Logout realizado. Redirecionando...');
+            setTimeout(() => location.href = '/login.html', 1000);
+        }
+        
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            log('Página carregada. Clique em "Testar Carregamento de Consultas" para começar.');
+        });
+    </script>
+</body>
+</html>

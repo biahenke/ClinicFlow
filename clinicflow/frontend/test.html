@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste Rápido</title>
+    <style>
+        body { font-family: monospace; background: #000; color: #0f0; padding: 20px; }
+        .box { background: #111; padding: 15px; margin: 10px 0; border: 1px solid #0f0; }
+        .error { color: #f00; border-color: #f00; }
+        button { background: #0f0; color: #000; padding: 10px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Teste de Conectividade</h1>
+    
+    <div class="box">
+        <button onclick="testAPI()">1. Testar API</button>
+        <div id="test1"></div>
+    </div>
+    
+    <div class="box">
+        <button onclick="testToken()">2. Verificar Token</button>
+        <div id="test2"></div>
+    </div>
+    
+    <div class="box">
+        <button onclick="testLogin()">3. Fazer Login</button>
+        <div id="test3"></div>
+    </div>
+    
+    <script>
+        function log(msg, id) {
+            document.getElementById(id).innerHTML += msg + '<br>';
+            console.log(msg);
+        }
+        
+        function testToken() {
+            const id = 'test2';
+            document.getElementById(id).innerHTML = '';
+            const token = localStorage.getItem('token');
+            if (token) {
+                log('✓ Token encontrado', id);
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    log(`✓ User ID: ${payload.sub}`, id);
+                    log(`✓ Role: ${payload.role}`, id);
+                } catch(e) {
+                    log('✗ Erro ao decodificar token', id);
+                }
+            } else {
+                log('✗ Sem token - você precisa fazer login', id);
+            }
+        }
+        
+        async function testAPI() {
+            const id = 'test1';
+            document.getElementById(id).innerHTML = '';
+            
+            const token = localStorage.getItem('token');
+            if (!token) {
+                log('✗ Sem token - faça login primeiro', id);
+                return;
+            }
+            
+            try {
+                log('Testando http://localhost:8000/api/consultas/?skip=0&limit=5', id);
+                const response = await fetch('http://localhost:8000/api/consultas/?skip=0&limit=5', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                log(`Status: ${response.status}`, id);
+                
+                if (!response.ok) {
+                    const text = await response.text();
+                    log(`✗ Erro: ${text}`, id);
+                    return;
+                }
+                
+                const data = await response.json();
+                log(`✓ Total: ${data.total}`, id);
+                log(`✓ Items: ${data.items.length}`, id);
+                
+                if (data.items.length > 0) {
+                    const c = data.items[0];
+                    log(`✓ Primeira: ${c.data} - ${c.medico.especialidade}`, id);
+                }
+            } catch(e) {
+                log(`✗ Erro: ${e.message}`, id);
+            }
+        }
+        
+        async function testLogin() {
+            const id = 'test3';
+            document.getElementById(id).innerHTML = '';
+            
+            const formData = new URLSearchParams();
+            formData.append('username', 'admin@clinicflow.com');
+            formData.append('password', 'admin123');
+            
+            try {
+                log('Fazendo login...', id);
+                const response = await fetch('http://localhost:8000/api/auth/login', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                log(`Status: ${response.status}`, id);
+                
+                if (!response.ok) {
+                    const text = await response.text();
+                    log(`✗ Erro: ${text}`, id);
+                    return;
+                }
+                
+                const data = await response.json();
+                localStorage.setItem('token', data.access_token);
+                log(`✓ Login OK!`, id);
+                log(`✓ Token salvo: ${data.access_token.substring(0, 30)}...`, id);
+                log(`✓ Role: ${data.role}`, id);
+            } catch(e) {
+                log(`✗ Erro: ${e.message}`, id);
+            }
+        }
+    </script>
+</body>
+</html>

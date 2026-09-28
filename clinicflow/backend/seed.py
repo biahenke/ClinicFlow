@@ -228,6 +228,11 @@ async def seed():
                     hora = random.randint(8, 17)
                     minuto = random.choice([0, 30])
                     horario = time(hora, minuto)
+
+                    # Atendimentos futuros nunca devem estar como realizada
+                    if data_consulta > hoje or (data_consulta == hoje and horario > datetime.now().time()):
+                        if status in ['realizada', 'realizado', 'nao realizada']:
+                            status = 'agendada' 
                     
                     observacao = None
                     if status == "cancelada":

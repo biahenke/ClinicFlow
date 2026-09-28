@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Consultas Carregamento</title>
+    <style>
+        body { 
+            font-family: monospace; 
+            background: #000; 
+            color: #0f0; 
+            padding: 20px;
+            max-width: 1200px;
+        }
+        .log { 
+            margin: 5px 0; 
+            padding: 8px; 
+            background: #111; 
+            border-left: 3px solid #0f0;
+            word-wrap: break-word;
+            font-size: 12px;
+        }
+        .error { 
+            border-left-color: #f00; 
+            color: #f00; 
+        }
+        .success {
+            border-left-color: #0f0;
+            color: #0f0;
+        }
+        button {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px 0;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #0f0;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Debug: Teste de Carregamento</h1>
+    <button onclick="testCarregar()">Carregar Consultas Manualmente</button>
+    <button onclick="location.reload()">Recarregar Página</button>
+    
+    <h2>Logs:</h2>
+    <div id="output"></div>
+    
+    <h2>Tabela:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Data</th>
+                <th>Hora</th>
+                <th>Paciente</th>
+                <th>Médico</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="tbody">
+            <tr><td colspan="6">Aguardando teste...</td></tr>
+        </tbody>
+    </table>
+    
+    <script src="js/api.js"></script>
+    <script>
+        const out = document.getElementById('output');
+        const tbody = document.getElementById('tbody');
+        
+        function log(msg, isError = false) {
+            const div = document.createElement('div');
+            const isSuccess = msg.includes('✓');
+            div.className = 'log' + (isError ? ' error' : isSuccess ? ' success' : '');
+            div.textContent = msg;
+            out.appendChild(div);
+            console.log(msg);
+        }
+        
+        async function testCarregar() {
+            out.innerHTML = '';
+            tbody.innerHTML = '<tr><td colspan="6">Carregando...</td></tr>';
+            log('=== TESTE DE CARREGAMENTO ===\n');
+            
+            log('1. Verificando token...');
+            const token = localStorage.getItem('token');
+            if (!token) {
+                log('   ✗ NENHUM TOKEN! Faça login primeiro.', true);
+                return;
+            }
+            log('   ✓ Token encontrado');
+            
+            try {
+                log('\n2. Chamando window.api.getConsultas()...');
+                const startTime = Date.now();
+                
+                const response = await window.api.getConsultas(0, 10, {});
+                
+                const duration = Date.now() - startTime;
+                log(`   ✓ Requisição completada em ${duration}ms`);
+                log(`   ✓ Response type: ${typeof response}`);
+                log(`   ✓ Response keys: ${Object.keys(response).join(', ')}`);
+                log(`   ✓ Total: ${response.total} consultas`);
+                log(`   ✓ Items: ${response.items.length} items`);
+                
+                if (!response.items || response.items.length === 0) {
+                    log('   ⚠ NENHUM ITEM RETORNADO!', true);
+                    return;
+                }
+                
+                log('\n3. Renderizando tabela...');
+                tbody.innerHTML = '';
+                
+                response.items.forEach((c, idx) => {
+                    try {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${c.id}</td>
+                            <td>${c.data}</td>
+                            <td>${c.horario}</td>
+                            <td>${c.paciente?.user?.nome || 'N/A'}</td>
+                            <td>${c.medico?.user?.nome || 'N/A'}</td>
+                            <td>${c.status}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    } catch(e) {
+                        log(`   ✗ Erro ao renderizar linha ${idx}: ${e.message}`, true);
+                    }
+                });
+                
+                log(`   ✓ ${response.items.length} linhas renderizadas com sucesso!`);
+                log('\n✅ TESTE CONCLUÍDO COM SUCESSO!');
+                
+            } catch(e) {
+                log(`   ✗ ERRO: ${e.message}`, true);
+                log(`   ${e.stack}`, true);
+                tbody.innerHTML = '<tr><td colspan="6" style="color: red;">ERRO: ' + e.message + '</td></tr>';
+            }
+        }
+        
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            log('Página carregada. Clique em "Carregar Consultas Manualmente" para testar.');
+        });
+    </script>
+</body>
+</html>

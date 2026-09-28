@@ -1,125 +1,179 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - ClinicFlow</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        body {
-            background-color: var(--bg-main);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        .login-card {
-            background: var(--bg-surface);
-            border-radius: var(--radius-lg);
-            padding: 3rem;
-            width: 100%;
-            max-width: 420px;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border);
-        }
-        .login-header {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-        .login-logo {
-            width: 56px;
-            height: 56px;
-            background: var(--secondary);
-            color: var(--primary);
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.75rem;
-            font-weight: bold;
-            margin: 0 auto 1.5rem auto;
-        }
-        .login-header h1 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-main);
-            margin-bottom: 0.5rem;
-        }
-        .login-header p {
-            color: var(--text-muted);
-            font-size: 0.875rem;
-        }
-        .btn-full {
-            width: 100%;
-            padding: 0.875rem;
-            margin-top: 1rem;
-        }
-        .error-message {
-            background: var(--error-bg);
-            color: var(--error-text);
-            padding: 0.75rem;
-            border-radius: var(--radius-sm);
-            font-size: 0.875rem;
-            margin-bottom: 1.5rem;
-            display: none;
-            text-align: center;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - ClinicFlow</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #000f24;
+      background-image: 
+        radial-gradient(circle at 50% 15%, rgba(37, 99, 235, 0.12) 0%, transparent 60%),
+        radial-gradient(circle at 10% 80%, rgba(14, 165, 233, 0.06) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.06) 0%, transparent 40%);
+      color: #94a3b8;
+      min-height: 100vh;
+    }
+    
+    .form-control {
+      background: #000f24;
+      border: 1px solid #002d5c;
+      color: white;
+      transition: all 0.2s ease;
+    }
+    .form-control:focus {
+      border-color: #3b82f6;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+      background: #00122e;
+    }
+    
+    .btn-gradient {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      transition: all 0.25s ease;
+    }
+    .btn-gradient:hover {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      box-shadow: 0 0 25px rgba(59, 130, 246, 0.45);
+      transform: translateY(-1px);
+    }
+    .btn-gradient:active {
+      transform: translateY(0);
+    }
+  </style>
 </head>
-<body>
+<body class="flex items-center justify-center p-4">
 
-    <div class="login-card">
-        <div class="login-header">
-            <div class="login-logo">C</div>
-            <h1>ClinicFlow</h1>
-            <p>Bem-vindo ao sistema de gestão médica moderno.</p>
-        </div>
+  <div class="w-full max-w-[430px] bg-[#001b3a] border border-[#002d5c] rounded-2xl p-8 sm:p-10 shadow-[0_20px_50px_rgba(0,11,24,0.9),0_0_30px_rgba(0,45,92,0.35)] relative overflow-hidden backdrop-blur-sm">
+    
+    <!-- Top subtle accent bar -->
+    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600"></div>
 
-        <div id="errorMessage" class="error-message"></div>
-
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="email" class="form-label">E-mail</label>
-                <div style="position: relative;">
-                    <i data-lucide="mail" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-light); width: 18px; height: 18px;"></i>
-                    <input type="email" id="email" class="form-control" style="padding-left: 2.75rem;" required placeholder="seu@email.com">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="password" class="form-label">Senha</label>
-                <div style="position: relative;">
-                    <i data-lucide="lock" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-light); width: 18px; height: 18px;"></i>
-                    <input type="password" id="password" class="form-control" style="padding-left: 2.75rem;" required placeholder="••••••••">
-                </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary btn-full">Entrar na Plataforma</button>
-        </form>
+    <!-- Header / Brand -->
+    <div class="text-center mb-8">
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600/25 to-cyan-500/10 border border-blue-500/30 flex items-center justify-center mx-auto mb-4 shadow-[0_0_25px_rgba(59,130,246,0.3)]">
+        <i class="ph-fill ph-heartbeat text-3xl text-blue-400 animate-pulse"></i>
+      </div>
+      <h1 class="text-2xl font-bold text-white tracking-tight">ClinicFlow</h1>
+      <p class="text-xs text-slate-400 font-semibold tracking-wider uppercase mt-1">ClinicFlow • Gestão Médica</p>
+      <p class="text-xs text-slate-400 mt-2">Bem-vindo ao sistema de gestão médica moderno.</p>
     </div>
 
-    <script src="js/api.js"></script>
-    <script src="js/auth.js"></script>
-    <script>
-        lucide.createIcons();
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const errorEl = document.getElementById('errorMessage');
-            
-            try {
-                errorEl.style.display = 'none';
-                const response = await window.api.login(email, password);
-                localStorage.setItem('token', response.access_token);
-                localStorage.setItem('role', response.role);
-                window.location.href = '/dashboard.html';
-            } catch (error) {
-                errorEl.textContent = error.message;
-                errorEl.style.display = 'block';
-            }
-        });
-    </script>
+    <!-- Error message alert -->
+    <div id="errorMessage" class="hidden mb-6 bg-rose-500/10 border border-rose-500/30 text-rose-300 px-4 py-3 rounded-xl text-xs flex items-center gap-2.5">
+      <i class="ph-fill ph-warning-circle text-rose-400 text-base shrink-0"></i>
+      <span id="errorText" class="flex-1"></span>
+    </div>
+
+    <!-- Login form -->
+    <form id="loginForm" class="space-y-5">
+      <div>
+        <label for="email" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">E-mail</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <i class="ph ph-envelope-simple text-lg"></i>
+          </div>
+          <input 
+            type="email" 
+            id="email" 
+            class="form-control w-full pl-10 pr-4 py-3 rounded-xl text-sm placeholder-slate-500" 
+            placeholder="seu@email.com" 
+            required
+            autocomplete="email"
+          >
+        </div>
+      </div>
+
+      <div>
+        <label for="password" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Senha</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <i class="ph ph-lock-key text-lg"></i>
+          </div>
+          <input 
+            type="password" 
+            id="password" 
+            class="form-control w-full pl-10 pr-11 py-3 rounded-xl text-sm placeholder-slate-500" 
+            placeholder="••••••••" 
+            required
+            autocomplete="current-password"
+          >
+          <button 
+            type="button" 
+            id="togglePassword" 
+            class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-200 transition"
+            tabindex="-1"
+          >
+            <i id="toggleIcon" class="ph ph-eye text-lg"></i>
+          </button>
+        </div>
+      </div>
+
+      <button 
+        type="submit" 
+        id="submitBtn"
+        class="btn-gradient w-full py-3.5 px-4 rounded-xl text-white font-semibold text-sm shadow-lg flex items-center justify-center gap-2 mt-2 cursor-pointer"
+      >
+        <span id="btnText">Entrar na Plataforma</span>
+        <i id="btnIcon" class="ph ph-arrow-right font-bold text-sm"></i>
+      </button>
+    </form>
+
+    <div class="mt-8 pt-5 border-t border-[#002d5c] text-center">
+      <p class="text-[11px] text-slate-500">
+        Acesso seguro • Ambiente protegido por criptografia
+      </p>
+    </div>
+
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    const toggleBtn = document.getElementById('togglePassword');
+    const pwdInput = document.getElementById('password');
+    const toggleIcon = document.getElementById('toggleIcon');
+
+    toggleBtn.addEventListener('click', () => {
+      const isPwd = pwdInput.type === 'password';
+      pwdInput.type = isPwd ? 'text' : 'password';
+      toggleIcon.className = isPwd ? 'ph ph-eye-slash text-lg' : 'ph ph-eye text-lg';
+    });
+
+    const loginForm = document.getElementById('loginForm');
+    const errorEl = document.getElementById('errorMessage');
+    const errorText = document.getElementById('errorText');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const btnIcon = document.getElementById('btnIcon');
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      try {
+        errorEl.classList.add('hidden');
+        submitBtn.disabled = true;
+        btnText.textContent = 'Autenticando...';
+        btnIcon.className = 'ph ph-spinner animate-spin text-sm';
+
+        const response = await window.api.login(email, password);
+        localStorage.setItem('token', response.access_token);
+        localStorage.setItem('role', response.role);
+        window.location.href = '/dashboard.html';
+      } catch (error) {
+        errorText.textContent = error.message || 'Falha ao autenticar. Verifique seus dados.';
+        errorEl.classList.remove('hidden');
+        submitBtn.disabled = false;
+        btnText.textContent = 'Entrar na Plataforma';
+        btnIcon.className = 'ph ph-arrow-right font-bold text-sm';
+      }
+    });
+  </script>
 </body>
 </html>

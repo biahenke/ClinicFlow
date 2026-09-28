@@ -51,7 +51,7 @@ Acesse `http://localhost:8080` e faça login com os usuários de teste.
 
 ## Usuários de Demonstração (Seed)
 
-- **Admin:** ``admin@clinicflow.com / `admin123`
+- **Admin:** `` admin@clinicflow.com/ `admin123`
 - **Médico:** `medico@clinicflow.com` / `medico123`
 - **Paciente:** `paciente@clinicflow.com` / `paciente123`
 
