@@ -20,18 +20,18 @@
     .sidebar-item:hover { background: rgba(255,255,255,0.05); color: white; }
     .sidebar-item.active { background: linear-gradient(90deg, #0ea5e9, #0284c7); color: white; font-weight: 600; box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3); }
     
-    .stat-card { background: #002845; border: 1px solid #1e293b; border-radius: 1rem; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; }
-    .dark-card { background: #002845; border-radius: 1rem; border: 1px solid #1e293b; padding: 1.5rem; }
+    .stat-card { background: #002845; border: 1px solid #002d5c; border-radius: 1rem; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; }
+    .dark-card { background: #002845; border-radius: 1rem; border: 1px solid #002d5c; padding: 1.5rem; }
     
-    .table-dark th { color: #94a3b8; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; padding-bottom: 1rem; text-align: left; border-bottom: 1px solid #1e293b; }
-    .table-dark td { padding: 1rem 0; font-size: 0.85rem; color: #cbd5e1; border-bottom: 1px solid #1e293b; }
+    .table-dark th { color: #94a3b8; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; padding-bottom: 1rem; text-align: left; border-bottom: 1px solid #002d5c; }
+    .table-dark td { padding: 1rem 0; font-size: 0.85rem; color: #cbd5e1; border-bottom: 1px solid #002d5c; }
     .table-dark tr:last-child td { border-bottom: none; }
   </style>
 </head>
 <body class="h-screen overflow-hidden flex">
 
   <!-- LEFT SIDEBAR -->
-  <aside class="group w-[80px] hover:w-[260px] transition-all duration-300 bg-[#001c30] border-r border-[#1e293b] flex flex-col shrink-0 z-50 h-full overflow-hidden">
+  <aside class="group w-[80px] hover:w-[260px] transition-all duration-300 bg-[#001c30] border-r border-[#002d5c] flex flex-col shrink-0 z-50 h-full overflow-hidden">
     <div class="h-24 flex items-center px-6 overflow-hidden">
       <div class="flex items-center">
         <i class="ph-fill ph-heartbeat text-4xl text-sky-500 shrink-0"></i>
@@ -91,7 +91,7 @@
       <h2 class="text-xl font-bold text-white">Relatórios & Analytics</h2>
       
       <div class="flex items-center gap-6">
-        <div class="flex items-center gap-3 border-l border-[#1e293b] pl-6 cursor-pointer">
+        <div class="flex items-center gap-3 border-l border-[#002d5c] pl-6 cursor-pointer">
           <div class="w-10 h-10 rounded-full bg-cyan-400 text-slate-900 flex items-center justify-center font-bold text-lg" id="avatar-initial">?</div>
           <div class="flex flex-col">
             <span class="text-white font-semibold text-sm" id="profile-name">Carregando...</span>
@@ -114,16 +114,16 @@
         <div class="flex items-center gap-4">
           <div class="flex flex-col">
             <label class="text-xs text-slate-400 font-medium mb-1">Data Inicial</label>
-            <input type="date" id="filter-start" class="bg-[#00111f] border border-[#1e293b] rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-sky-500 [color-scheme:dark]">
+            <input type="date" id="filter-start" class="bg-[#00111f] border border-[#002d5c] rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-sky-500 [color-scheme:dark]">
           </div>
           <div class="flex flex-col">
             <label class="text-xs text-slate-400 font-medium mb-1">Data Final</label>
-            <input type="date" id="filter-end" class="bg-[#00111f] border border-[#1e293b] rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-sky-500 [color-scheme:dark]">
+            <input type="date" id="filter-end" class="bg-[#00111f] border border-[#002d5c] rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-sky-500 [color-scheme:dark]">
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <button id="btn-this-week" class="px-3 py-1.5 rounded-lg text-sm bg-[#1e293b] hover:bg-[#334155] text-white transition">Esta Semana</button>
-          <button id="btn-last-30" class="px-3 py-1.5 rounded-lg text-sm bg-[#1e293b] hover:bg-[#334155] text-white transition">Últ. 30 dias</button>
+          <button id="btn-this-week" class="px-3 py-1.5 rounded-lg text-sm bg-[#002d5c] hover:bg-[#334155] text-white transition">Esta Semana</button>
+          <button id="btn-last-30" class="px-3 py-1.5 rounded-lg text-sm bg-[#002d5c] hover:bg-[#334155] text-white transition">Últ. 30 dias</button>
           <button id="btn-clear" class="px-3 py-1.5 rounded-lg text-sm bg-slate-800 hover:bg-slate-700 text-white transition">Limpar</button>
           <button id="btn-apply-filter" class="px-4 py-1.5 rounded-lg text-sm bg-sky-600 hover:bg-sky-500 text-white font-bold shadow-lg shadow-sky-500/30 transition ml-2">Filtrar</button>
         </div>
@@ -166,19 +166,19 @@
                   <canvas id="statusChart"></canvas>
                 </div>
                 <div class="flex flex-col gap-4 w-1/2">
-                  <div class="flex justify-between items-center p-2 bg-[#001c30] rounded-lg border border-[#1e293b]">
+                  <div class="flex justify-between items-center p-2 bg-[#001c30] rounded-lg border border-[#002d5c]">
                     <div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div> <span class="text-xs font-medium text-slate-300">Realizada</span></div>
                     <span class="text-sm font-bold text-white" id="stat-realizada">0</span>
                   </div>
-                  <div class="flex justify-between items-center p-2 bg-[#001c30] rounded-lg border border-[#1e293b]">
+                  <div class="flex justify-between items-center p-2 bg-[#001c30] rounded-lg border border-[#002d5c]">
                     <div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-sky-500"></div> <span class="text-xs font-medium text-slate-300">Agendada</span></div>
                     <span class="text-sm font-bold text-white" id="stat-agendada">0</span>
                   </div>
-                  <div class="flex justify-between items-center p-2 bg-[#001c30] rounded-lg border border-[#1e293b]">
+                  <div class="flex justify-between items-center p-2 bg-[#001c30] rounded-lg border border-[#002d5c]">
                     <div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-red-500"></div> <span class="text-xs font-medium text-slate-300">Cancelada</span></div>
                     <span class="text-sm font-bold text-white" id="stat-cancelada">0</span>
                   </div>
-                  <div class="flex justify-between items-center p-2 bg-[#001c30] rounded-lg border border-[#1e293b]">
+                  <div class="flex justify-between items-center p-2 bg-[#001c30] rounded-lg border border-[#002d5c]">
                     <div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-slate-500"></div> <span class="text-xs font-medium text-slate-300">Não Realiz.</span></div>
                     <span class="text-sm font-bold text-white" id="stat-nao-realizada">0</span>
                   </div>
@@ -335,9 +335,9 @@
                 espList.innerHTML = '<p class="text-slate-500 text-sm">Sem dados disponíveis no período.</p>';
             } else {
                 espList.innerHTML = esps.map(e => `
-                    <div class="flex justify-between items-center text-sm border-b border-[#1e293b] pb-2 last:border-0">
+                    <div class="flex justify-between items-center text-sm border-b border-[#002d5c] pb-2 last:border-0">
                         <span class="text-slate-300">${e[0]}</span>
-                        <span class="font-bold text-white bg-[#001c30] border border-[#1e293b] px-2 py-0.5 rounded">${e[1]}</span>
+                        <span class="font-bold text-white bg-[#001c30] border border-[#002d5c] px-2 py-0.5 rounded">${e[1]}</span>
                     </div>
                 `).join('');
             }
@@ -374,7 +374,7 @@
                         x: {
                             beginAtZero: true,
                             ticks: { stepSize: 1, color: '#94a3b8', font: { family: 'Inter', size: 11 } },
-                            grid: { color: '#1e293b' },
+                            grid: { color: '#002d5c' },
                             border: { display: false }
                         },
                         y: {

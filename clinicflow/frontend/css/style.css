@@ -5,9 +5,9 @@
   --bg-main: #11131e; /* Dark background */
   --bg-surface: #1e1f35; /* Cards background */
   
-  --primary: #4f46e5; /* Indigo */
+  --primary: #0066CC; /* Indigo */
   --primary-light: rgba(99, 102, 241, 0.2); 
-  --primary-hover: #4338ca;
+  --primary-hover: #0055AA;
   
   --panel-bg: #1e1f35; 
   --panel-text: #FFFFFF;
