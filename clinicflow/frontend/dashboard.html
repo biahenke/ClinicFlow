@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - Clínica Vida</title>
+  <title>Dashboard - ClinicFlow</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <style>
@@ -46,7 +46,7 @@
       <div class="flex items-center">
         <i class="ph-fill ph-heartbeat text-4xl text-blue-500 shrink-0"></i>
         <div class="flex flex-col">
-          <span class="max-w-0 opacity-0 group-hover:max-w-[200px] group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap group-hover:ml-3 text-white font-bold text-xl leading-tight">Clínica Vida</span><span class="max-w-0 opacity-0 group-hover:max-w-[200px] group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap group-hover:ml-3 text-[0.65rem] text-slate-400 font-semibold tracking-widest">GESTÃO DE SAÚDE</span>
+          <span class="max-w-0 opacity-0 group-hover:max-w-[200px] group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap group-hover:ml-3 text-white font-bold text-xl leading-tight">ClinicFlow</span><span class="max-w-0 opacity-0 group-hover:max-w-[200px] group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap group-hover:ml-3 text-[0.65rem] text-slate-400 font-semibold tracking-widest">GESTÃO DE SAÚDE</span>
         </div>
       </div>
     </div>
@@ -77,20 +77,9 @@
   <div class="flex-1 flex flex-col overflow-hidden bg-[#000f24]">
     
     <!-- TOP HEADER -->
-    <header class="h-20 px-8 flex items-center justify-between shrink-0">
-      <div class="relative">
-        <i class="ph ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 shrink-0"></i>
-        <input type="text" placeholder="Buscar paciente, consulta ou médico..." class="w-[450px] bg-[#001b3a] border border-[#002d5c] rounded-full py-2.5 pl-12 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500">
-        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] bg-[#002d5c] px-2 py-1 rounded text-slate-400">Ctrl + K</span>
-      </div>
-      
+    <header class="h-20 px-8 flex items-center justify-end shrink-0">
       <div class="flex items-center gap-6">
-        <button class="relative text-slate-400 hover:text-white transition">
-          <i class="ph ph-bell text-2xl shrink-0"></i>
-          <span id="notification-dot" class="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#000f24] hidden"></span>
-        </button>
-        
-        <div class="flex items-center gap-3 border-l border-[#002d5c] pl-6 cursor-pointer">
+        <div class="flex items-center gap-3 border-l border-[#002d5c] pl-6 cursor-pointer hover:opacity-80 transition" onclick="window.location.href='perfil.html'">
           <div class="w-10 h-10 rounded-full bg-cyan-400 text-slate-900 flex items-center justify-center font-bold text-lg" id="avatar-initial">A</div>
           <div class="flex flex-col">
             <span class="text-white font-semibold text-sm" id="profile-name">Administrador</span>
@@ -238,9 +227,6 @@
                 <i class="ph-fill ph-calendar-blank text-xl text-blue-400 shrink-0"></i>
                 <h3 class="font-bold text-white text-sm">Consultas da Semana</h3>
               </div>
-              <button class="bg-[#002d5c] border border-[#334155] rounded-lg px-3 py-1.5 text-xs text-slate-300 flex items-center gap-2">
-                Esta semana <i class="ph ph-caret-down shrink-0"></i>
-              </button>
             </div>
             
             <div class="flex-1 relative flex mt-2 h-40">
@@ -285,9 +271,6 @@
                 <i class="ph-fill ph-chart-pie-slice text-xl text-blue-400 shrink-0"></i>
                 <h3 class="font-bold text-white text-sm">Status da Semana</h3>
               </div>
-              <button class="bg-[#002d5c] border border-[#334155] rounded-lg px-3 py-1.5 text-xs text-slate-300 flex items-center gap-2">
-                Esta semana <i class="ph ph-caret-down shrink-0"></i>
-              </button>
             </div>
             
             <div class="flex-1 flex items-center justify-between">
@@ -329,7 +312,6 @@
                 <i class="ph-fill ph-calendar-check text-xl text-blue-400 shrink-0"></i>
                 <h3 class="font-bold text-white text-sm">Próximas Consultas</h3>
               </div>
-              <a href="#" class="text-xs text-blue-400 hover:text-blue-300">Ver todas</a>
             </div>
             <table class="w-full table-dark">
               <thead>
@@ -348,7 +330,6 @@
                 <i class="ph-fill ph-user-plus text-xl text-blue-400 shrink-0"></i>
                 <h3 class="font-bold text-white text-sm">Últimos Pacientes Cadastrados</h3>
               </div>
-              <a href="#" class="text-xs text-blue-400 hover:text-blue-300">Ver todos</a>
             </div>
             <table class="w-full table-dark">
               <thead>
@@ -385,34 +366,11 @@
         <div class="flex-1 flex flex-col min-h-0">
           <div class="flex justify-between items-center mb-4">
             <h4 class="text-white font-bold text-sm" id="agenda-title">Agenda do Dia</h4>
-            <a href="#" class="text-xs text-blue-400 hover:text-blue-300">Ver todos</a>
+            <a href="consultas.html" class="text-xs text-blue-400 hover:text-blue-300">Ver todos</a>
           </div>
           
           <div class="flex flex-col gap-3 overflow-y-auto" id="agenda-list-body" style="padding-right: 0.25rem;">
-            
-            <div class="bg-[#001b3a] border border-[#002d5c] rounded-xl p-3 flex gap-3 items-center hover:bg-[#002d5c] transition cursor-pointer shadow-md">
-              <div class="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-md">08:00</div>
-              <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700 shrink-0">
-                <i class="ph ph-user text-slate-300 shrink-0"></i>
-              </div>
-              <div class="flex-1 overflow-hidden">
-                <h5 class="text-white text-xs font-bold truncate">Felipe Ribeiro Gomes</h5>
-                <p class="text-slate-400 text-[10px] truncate">Dra. Paula Lima - Ortopedia</p>
-              </div>
-              <i class="ph ph-caret-right text-slate-500 shrink-0"></i>
-            </div>
-            
-            <div class="bg-[#001b3a] border border-[#002d5c] rounded-xl p-3 flex gap-3 items-center hover:bg-[#002d5c] transition cursor-pointer shadow-md">
-              <div class="bg-teal-500 text-white text-xs font-bold px-2 py-1 rounded-md">09:00</div>
-              <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700 shrink-0">
-                <i class="ph ph-user text-slate-300 shrink-0"></i>
-              </div>
-              <div class="flex-1 overflow-hidden">
-                <h5 class="text-white text-xs font-bold truncate">Maria Souza Rocha</h5>
-                <p class="text-slate-400 text-[10px] truncate">Dr. Carlos Lima - Pediatria</p>
-              </div>
-              <i class="ph ph-caret-right text-slate-500 shrink-0"></i>
-            </div>
+            <p class="text-xs text-slate-400 p-2">Carregando agenda...</p>
           </div>
         </div>
 
@@ -524,10 +482,11 @@ async function loadProximasConsultas() {
             if(status.toLowerCase() === 'confirmada') statusColor = 'bg-emerald-500/20 text-emerald-400';
             if(status.toLowerCase() === 'realizada') statusColor = 'bg-teal-500/20 text-teal-400';
             if(status.toLowerCase() === 'cancelada') statusColor = 'bg-amber-500/20 text-amber-400';
+            const cDate = c.data || today;
             
-            html += `<tr>
-                <td class="font-bold text-white">${time}</td>
-                <td>${pNome}</td>
+            html += `<tr onclick="window.location.href='consultas.html?highlight_id=${c.id}&data=${cDate}'" class="cursor-pointer hover:bg-blue-900/20 transition group">
+                <td class="font-bold text-white group-hover:text-blue-400 transition">${time}</td>
+                <td class="group-hover:text-blue-300 transition">${pNome}</td>
                 <td>${mNome}</td>
                 <td>${esp}</td>
                 <td><span class="${statusColor} px-2 py-0.5 rounded text-[10px] font-bold">${status}</span></td>
@@ -659,6 +618,7 @@ async function loadAgenda() {
     try {
         const today = new Date().toISOString().split('T')[0];
         const consultas = await window.api.getConsultas(0, 100, { data: today });
+        consultasDeHoje = consultas.items || [];
         const agendaBody = document.getElementById('agenda-list-body');
         if(!agendaBody) return;
         
@@ -670,22 +630,25 @@ async function loadAgenda() {
         let html = '';
         consultas.items.forEach(c => {
             const time = c.horario ? c.horario.substring(0, 5) : '--:--';
-            const statusColor = c.status === 'Confirmada' ? 'bg-teal-500' : 'bg-blue-500';
+            const statusLower = (c.status || '').toLowerCase();
+            const statusColor = (statusLower === 'confirmada' || statusLower === 'realizada') ? 'bg-teal-500' : 'bg-blue-500';
             const pNome = c.paciente && c.paciente.user ? c.paciente.user.nome : 'Paciente Desconhecido';
             const mNome = c.medico && c.medico.user ? c.medico.user.nome : 'Médico Desconhecido';
             const esp = c.medico ? c.medico.especialidade : '';
+            const cDate = c.data || today;
             
             html += `
-            <div class="bg-[#001b3a] border border-[#002d5c] rounded-xl p-3 flex gap-3 items-center hover:bg-[#002d5c] transition cursor-pointer shadow-md">
-              <div class="${statusColor} text-white text-xs font-bold px-2 py-1 rounded-md">${time}</div>
-              <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700 shrink-0">
-                <i class="ph ph-user text-slate-300 shrink-0"></i>
+            <div onclick="window.location.href='consultas.html?highlight_id=${c.id}&data=${cDate}'" 
+                 class="bg-[#001b3a] border border-[#002d5c] rounded-xl p-3 flex gap-3 items-center hover:bg-[#002855] hover:border-blue-500/60 hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition duration-200 cursor-pointer shadow-md group">
+              <div class="${statusColor} text-white text-xs font-bold px-2 py-1 rounded-md shrink-0 shadow-sm">${time}</div>
+              <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700 shrink-0 group-hover:border-blue-400 transition">
+                <i class="ph ph-user text-slate-300 group-hover:text-blue-300 transition shrink-0"></i>
               </div>
               <div class="flex-1 overflow-hidden">
-                <h5 class="text-white text-xs font-bold truncate">${pNome}</h5>
+                <h5 class="text-white text-xs font-bold truncate group-hover:text-blue-300 transition">${pNome}</h5>
                 <p class="text-slate-400 text-[10px] truncate">${mNome} - ${esp}</p>
               </div>
-              <i class="ph ph-caret-right text-slate-500 shrink-0"></i>
+              <i class="ph ph-caret-right text-slate-500 group-hover:text-blue-400 group-hover:translate-x-0.5 transition shrink-0"></i>
             </div>
             `;
         });
@@ -695,12 +658,73 @@ async function loadAgenda() {
     }
 }
 
+async function loadStatusSemana() {
+    try {
+        const res = await window.api.getConsultas(0, 1000);
+        
+        const today = new Date();
+        const startOfWeek = new Date(today);
+        startOfWeek.setDate(today.getDate() - today.getDay());
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+        
+        const startStr = startOfWeek.toISOString().split('T')[0];
+        const endStr = endOfWeek.toISOString().split('T')[0];
+        
+        const semanaConsultas = res.items.filter(c => c.data >= startStr && c.data <= endStr);
+        
+        let realizadas = 0, agendadas = 0, canceladas = 0, naoRealizadas = 0;
+        
+        semanaConsultas.forEach(c => {
+            const status = (c.status || '').toLowerCase();
+            if(status === 'realizada') realizadas++;
+            else if(status === 'agendada') agendadas++;
+            else if(status === 'cancelada') canceladas++;
+            else if(status === 'nao realizada') naoRealizadas++;
+        });
+        
+        const total = semanaConsultas.length;
+        
+        // Calculate percentages
+        const percRealizadas = total > 0 ? Math.round((realizadas / total) * 100) : 0;
+        const percAgendadas = total > 0 ? Math.round((agendadas / total) * 100) : 0;
+        const percCanceladas = total > 0 ? Math.round((canceladas / total) * 100) : 0;
+        const percNaoRealizadas = total > 0 ? Math.round((naoRealizadas / total) * 100) : 0;
+        
+        // Update DOM
+        document.getElementById('status-total').innerText = total;
+        document.getElementById('num-realizadas').innerText = realizadas;
+        document.getElementById('perc-realizadas').innerText = percRealizadas + '%';
+        document.getElementById('num-agendadas').innerText = agendadas;
+        document.getElementById('perc-agendadas').innerText = percAgendadas + '%';
+        document.getElementById('num-canceladas').innerText = canceladas;
+        document.getElementById('perc-canceladas').innerText = percCanceladas + '%';
+        document.getElementById('num-nao-realizadas').innerText = naoRealizadas;
+        document.getElementById('perc-nao-realizadas').innerText = percNaoRealizadas + '%';
+        
+        // Update donut chart gradient
+        const chartEl = document.getElementById('status-donut-chart');
+        if(chartEl) {
+            const gradient = `conic-gradient(
+                #2dd4bf 0% ${percRealizadas}%,
+                #3b82f6 ${percRealizadas}% ${percRealizadas + percAgendadas}%,
+                #f59e0b ${percRealizadas + percAgendadas}% ${percRealizadas + percAgendadas + percCanceladas}%,
+                #64748b ${percRealizadas + percAgendadas + percCanceladas}% 100%
+            )`;
+            chartEl.style.background = gradient;
+        }
+    } catch (e) {
+        console.error("Erro ao carregar status da semana:", e);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     renderHeroDateAndWeather();
     renderCalendar();
     loadAgenda();
     loadProximasConsultas();
     loadConsultasSemana();
+    loadStatusSemana();
     loadUltimosPacientes();
 
     try {

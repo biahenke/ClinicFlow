@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug API</title>
+    <style>
+        body { font-family: monospace; background: #000; color: #0f0; padding: 20px; }
+        .log { margin: 10px 0; padding: 10px; background: #111; border-left: 3px solid #0f0; }
+        .error { border-left-color: #f00; color: #f00; }
+    </style>
+</head>
+<body>
+    <h1>Debug: Teste de Carregamento de Consultas</h1>
+    <div id="output"></div>
+    
+    <script>
+        const out = document.getElementById('output');
+        
+        function log(msg, isError = false) {
+            const div = document.createElement('div');
+            div.className = 'log' + (isError ? ' error' : '');
+            div.textContent = msg;
+            out.appendChild(div);
+            console.log(msg);
+        }
+        
+        async function test() {
+            log('1. Verificando token no localStorage...');
+            const token = localStorage.getItem('token');
+            if (token) {
+                log(`   ✓ Token encontrado: ${token.substring(0, 50)}...`);
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    log(`   ✓ Role: ${payload.role}, User ID: ${payload.sub}`);
+                } catch(e) {
+                    log(`   ✗ Erro ao decodificar token: ${e.message}`, true);
+                }
+            } else {
+                log('   ✗ NENHUM TOKEN ENCONTRADO!', true);
+                log('   Você precisa fazer login primeiro!', true);
+                return;
+            }
+            
+            log('\n2. Testando requisição /api/consultas/...');
+            try {
+                const response = await fetch('http://localhost:8000/api/consultas/?skip=0&limit=10', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                log(`   Status: ${response.status} ${response.statusText}`);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    log(`   ✗ Erro na resposta: ${errorText}`, true);
+                    return;
+                }
+                
+                const data = await response.json();
+                log(`   ✓ Resposta recebida com sucesso!`);
+                log(`   Total de consultas: ${data.total}`);
+                log(`   Items retornados: ${data.items.length}`);
+                
+                if (data.items.length > 0) {
+                    log(`   Primeira consulta: ${data.items[0].id} - ${data.items[0].data}`);
+                }
+            } catch(e) {
+                log(`   ✗ Erro na requisição: ${e.message}`, true);
+                log(e.stack, true);
+            }
+        }
+        
+        test();
+    </script>
+</body>
+</html>

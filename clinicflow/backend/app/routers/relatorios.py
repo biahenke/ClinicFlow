@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from datetime import date, timedelta
 from ..database import get_db
-from app import models
+from .. import models
 from ..dependencies import get_current_user
 
 router = APIRouter(prefix="/relatorios", tags=["Relatórios"])
@@ -65,6 +65,10 @@ async def get_summary(
             metrics["periodo"]["futuro"] += 1
             
         status_key = c.status.lower().replace(" ", "_")
+        if status_key in ['realizada', 'realizado']:
+            agora = datetime.now().time()
+            if c.data > hoje or (c.data == hoje and c.horario and c.horario > agora):
+                status_key = 'agendada'
         if status_key in metrics["status"]:
             metrics["status"][status_key] += 1
             

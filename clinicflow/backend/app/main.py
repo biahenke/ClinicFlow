@@ -11,6 +11,34 @@ from .routers import auth, medicos, pacientes, consultas, users, especialidades,
 async def lifespan(app: FastAPI):
     # Cria todas as tabelas na inicialização
     await init_db()
+    # Assegurar que atendimentos futuros no banco não estejam marcados como realizada
+    try:
+        from .database import AsyncSessionLocal
+        from .models import Consulta
+        from sqlalchemy import select, or_, and_
+        from datetime import date, datetime
+        async with AsyncSessionLocal() as session:
+            hoje = date.today()
+            agora = datetime.now().time()
+            query = select(Consulta).where(
+                or_(
+                    Consulta.status.ilike('realizada'),
+                    Consulta.status.ilike('realizado')
+                ),
+                or_(
+                    Consulta.data > hoje,
+                    and_(Consulta.data == hoje, Consulta.horario > agora)
+                )
+            )
+            result = await session.execute(query)
+            futuras_realizadas = result.scalars().all()
+            if futuras_realizadas:
+                for c in futuras_realizadas:
+                    c.status = 'agendada'
+                await session.commit()
+                print(f'[INFO] {len(futuras_realizadas)} atendimentos futuros corrigidos de realizada para agendada.')
+    except Exception as e:
+        print(f'[WARN] Erro ao sanitizar status de consultas futuras na inicializacao: {e}')
     yield
 
 app = FastAPI(
@@ -20,19 +48,19 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# ✅ CORS MIDDLEWARE COM DECORATOR
+@app.middleware("http")
+async def add_cors_headers(request, call_next):
+    response = await call_next(request)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    return response
+
 # Serve frontend static files (HTML, CSS, JS)
 import os
 frontend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../frontend"))
-# Static files will be mounted after routers (see below)
-
-# CORS — permite frontend (porta 3000) acessar o backend (porta 8000)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 app.include_router(auth.router, prefix="/api")
 app.include_router(medicos.router, prefix="/api")
@@ -41,15 +69,6 @@ app.include_router(consultas.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
 app.include_router(especialidades.router, prefix="/api")
 app.include_router(relatorios.router, prefix="/api")
-app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")
-
-@app.get("/", response_class=HTMLResponse)
-async def root():
-    import os
-    index_path = os.path.join(frontend_path, "index.html")
-    return FileResponse(index_path, media_type="text/html")
-
-
 @app.get("/health", tags=["Health"])
 async def health():
     return {"status": "ok", "message": "ClinicFlow API running"}
@@ -57,7 +76,8 @@ async def health():
 # Debug endpoint to show frontend path
 @app.get("/debug_path", tags=["Debug"])
 async def debug_path():
-    import os
     path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../frontend"))
     exists = os.path.isdir(path)
     return {"frontend_path": path, "exists": exists}
+
+app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")

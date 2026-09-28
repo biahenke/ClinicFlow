@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from typing import List, Optional
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from ..database import get_db
 from .. import models, schemas
 from ..dependencies import get_current_user
@@ -77,6 +77,17 @@ async def list_consultas(
     query = query.offset(skip).limit(limit)
     result = await db.execute(query)
     items = result.scalars().all()
+
+    hoje = date.today()
+    agora = datetime.now().time()
+    needs_commit = False
+    for c in items:
+        if c.status and c.status.lower() in ['realizada', 'realizado']:
+            if c.data > hoje or (c.data == hoje and c.horario and c.horario > agora):
+                c.status = 'agendada'
+                needs_commit = True
+    if needs_commit:
+        await db.commit()
     
     return {"items": items, "total": total or 0}
 
@@ -151,6 +162,15 @@ async def get_consulta(consulta_id: int, db: AsyncSession = Depends(get_db), _=D
     consulta = result.scalar_one_or_none()
     if not consulta:
         raise HTTPException(status_code=404, detail="Consulta não encontrada")
+    
+    hoje = date.today()
+    agora = datetime.now().time()
+    if consulta.status and consulta.status.lower() in ['realizada', 'realizado']:
+        if consulta.data > hoje or (consulta.data == hoje and consulta.horario and consulta.horario > agora):
+            consulta.status = 'agendada'
+            await db.commit()
+            await db.refresh(consulta)
+            
     return consulta
 
 
@@ -175,6 +195,7 @@ async def create_consulta(data: schemas.ConsultaCreate, db: AsyncSession = Depen
         paciente_id=data.paciente_id,
         data=data.data,
         horario=data.horario,
+        status="agendada",
         observacoes=data.observacoes
     )
     db.add(consulta)
@@ -190,7 +211,17 @@ async def update_consulta(consulta_id: int, data: schemas.ConsultaUpdate, db: As
     if not consulta:
         raise HTTPException(status_code=404, detail="Consulta não encontrada")
 
-    for field, value in data.model_dump(exclude_none=True).items():
+    dados = data.model_dump(exclude_none=True)
+    alvo_status = dados.get("status", consulta.status)
+    alvo_data = dados.get("data", consulta.data)
+    alvo_horario = dados.get("horario", consulta.horario)
+    hoje = date.today()
+    agora = datetime.now().time()
+    if alvo_status and alvo_status.lower().strip() in ['realizada', 'realizado']:
+        if alvo_data > hoje or (alvo_data == hoje and alvo_horario and alvo_horario > agora):
+            raise HTTPException(status_code=400, detail="Atendimentos futuros não podem ser marcados como 'Realizada'.")
+
+    for field, value in dados.items():
         setattr(consulta, field, value)
 
     await db.commit()
@@ -200,14 +231,24 @@ async def update_consulta(consulta_id: int, data: schemas.ConsultaUpdate, db: As
 
 @router.patch("/{consulta_id}/status", response_model=schemas.ConsultaOut)
 async def update_consulta_status(consulta_id: int, data: schemas.ConsultaStatusUpdate, db: AsyncSession = Depends(get_db), current_user: models.User = Depends(get_current_user)):
-    valid_statuses = ['agendada', 'cancelada', 'nao realizada', 'realizada']
-    if data.status not in valid_statuses:
+    status_lower = data.status.lower().strip()
+    valid_statuses = ['agendada', 'cancelada', 'nao realizada', 'realizada', 'realizado']
+    if status_lower not in valid_statuses:
         raise HTTPException(status_code=400, detail="Status inválido")
+
+    status_final = 'realizada' if status_lower in ['realizada', 'realizado'] else status_lower
 
     result = await db.execute(select(models.Consulta).where(models.Consulta.id == consulta_id))
     consulta = result.scalar_one_or_none()
     if not consulta:
         raise HTTPException(status_code=404, detail="Consulta não encontrada")
+
+    # Validação de atendimentos futuros
+    if status_final == 'realizada':
+        hoje = date.today()
+        agora = datetime.now().time()
+        if consulta.data > hoje or (consulta.data == hoje and consulta.horario and consulta.horario > agora):
+            raise HTTPException(status_code=400, detail="Atendimentos futuros não podem ser marcados como 'Realizada'.")
 
     # RBAC validation
     if current_user.role == 'medico' or current_user.role == 'doctor':
@@ -218,7 +259,7 @@ async def update_consulta_status(consulta_id: int, data: schemas.ConsultaStatusU
     elif current_user.role not in ['admin', 'receptionist']:
         raise HTTPException(status_code=403, detail="Acesso negado. Você não tem permissão para alterar o status.")
 
-    consulta.status = data.status
+    consulta.status = status_final
     await db.commit()
     await db.refresh(consulta)
     return consulta
