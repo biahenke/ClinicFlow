@@ -1,7 +1,8 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  <link rel="icon" type="image/jpeg" href="img/favicon.jpg">
+    <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Relatórios - ClinicFlow</title>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -63,14 +64,11 @@
           <a href="admin-users.html" class="sidebar-item admin-only"><i class="ph ph-shield text-xl shrink-0"></i> <span class="max-w-0 opacity-0 group-hover:max-w-[200px] group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap group-hover:ml-3 flex-1">Admin</span></a>
     </nav>
     
-    <div class="p-6">
-      <a href="#" class="sidebar-item !mx-0 !px-0 flex items-center gap-3">
-        <i class="ph ph-headset text-2xl text-slate-400 shrink-0"></i>
-        <div class="flex flex-col">
-          <span class="text-white font-medium text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Suporte</span>
-          <span class="text-xs text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Precisa de ajuda?</span>
-        </div>
-      </a>
+        <div class="p-4">
+      <button onclick="logout()" class="sidebar-item !mx-0 !px-3 w-full flex items-center gap-3 text-red-400 hover:text-red-300 hover:bg-red-900/20 border border-red-800/40 hover:border-red-700/60 rounded-xl transition-all duration-200">
+        <i class="ph ph-sign-out text-xl shrink-0"></i>
+        <span class="max-w-0 opacity-0 group-hover:max-w-[200px] group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap group-hover:ml-1 font-medium text-sm">Sair</span>
+      </button>
     </div>
   </aside>
 
