@@ -4,9 +4,10 @@ import os
 from dotenv import load_dotenv
 import ssl
 
-load_dotenv()
+load_dotenv(dotenv_path=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.env')))
 
-database_url = os.getenv("DATABASE_URL", "")
+database_url = os.getenv('DATABASE_URL', '')
+print('DEBUG: DATABASE_URL from .env =', database_url)
 
 # Ajustar prefixo para asyncpg se necessário
 if database_url.startswith("postgresql://") and not database_url.startswith("postgresql+asyncpg://"):
@@ -15,16 +16,8 @@ if database_url.startswith("postgresql://") and not database_url.startswith("pos
 # Limpar query params da URL
 clean_url = database_url.split("?")[0]
 
-# Configurar SSLContext para asyncpg em nuvem (Neon/Supabase)
-ssl_context = ssl.create_default_context()
-ssl_context.check_hostname = False
-ssl_context.verify_mode = ssl.CERT_NONE
-
-engine = create_async_engine(
-    clean_url,
-    connect_args={"ssl": ssl_context},
-    pool_pre_ping=True
-)
+# Configure engine (supports SQLite and PostgreSQL)
+engine = create_async_engine(clean_url, pool_pre_ping=True)
 
 AsyncSessionLocal = sessionmaker(
     bind=engine,

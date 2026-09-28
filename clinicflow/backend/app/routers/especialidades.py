@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, distinct
 from typing import List
-from app.database import get_db
-from app import models
+from ..database import get_db
+from .. import models
 
 router = APIRouter(prefix="/especialidades", tags=["Especialidades"])
 

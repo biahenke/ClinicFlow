@@ -156,7 +156,7 @@
         if (tokenInfo) {
             try {
                 const payload = JSON.parse(atob(tokenInfo.split('.')[1]));
-                if (payload.role !== 'admin') {
+                if (payload.role && payload.role.toLowerCase() !== 'admin') {
                     window.location.href = 'dashboard.html';
                 }
             } catch(e) {}
