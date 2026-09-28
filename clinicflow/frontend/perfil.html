@@ -8,7 +8,7 @@
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    body { font-family: 'Inter', sans-serif; background-color: #0b1221; color: #94a3b8; }
+    body { font-family: 'Inter', sans-serif; background-color: #000f24; color: #94a3b8; }
     
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -19,11 +19,11 @@
     .sidebar-item:hover { background: rgba(255,255,255,0.05); color: white; }
     .sidebar-item.active { background: linear-gradient(90deg, #3b82f6, #2563eb); color: white; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
     
-    .stat-card { background: #131c31; border: 1px solid #1e293b; border-radius: 1rem; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; }
-    .dark-card { background: #131c31; border-radius: 1rem; border: 1px solid #1e293b; padding: 1.5rem; }
+    .stat-card { background: #001b3a; border: 1px solid #002d5c; border-radius: 1rem; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; }
+    .dark-card { background: #001b3a; border-radius: 1rem; border: 1px solid #002d5c; padding: 1.5rem; }
     
-    .table-dark th { color: #94a3b8; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; padding-bottom: 1rem; text-align: left; border-bottom: 1px solid #1e293b; }
-    .table-dark td { padding: 1rem 0; font-size: 0.85rem; color: #cbd5e1; border-bottom: 1px solid #1e293b; }
+    .table-dark th { color: #94a3b8; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; padding-bottom: 1rem; text-align: left; border-bottom: 1px solid #002d5c; }
+    .table-dark td { padding: 1rem 0; font-size: 0.85rem; color: #cbd5e1; border-bottom: 1px solid #002d5c; }
     .table-dark tr:last-child td { border-bottom: none; }
     
     .calendar-day { font-size: 0.85rem; display: flex; align-items: center; justify-content: center; height: 28px; width: 28px; cursor: pointer; transition: 0.2s; border-radius: 50%; color: #94a3b8; margin: 0 auto; }
@@ -35,13 +35,13 @@
       background: conic-gradient(#2dd4bf 0% 34%, #3b82f6 34% 83%, #f59e0b 83% 91%, #64748b 91% 100%);
       display: flex; align-items: center; justify-content: center;
     }
-    .donut-inner { width: 110px; height: 110px; border-radius: 50%; background: #131c31; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .donut-inner { width: 110px; height: 110px; border-radius: 50%; background: #001b3a; display: flex; flex-direction: column; align-items: center; justify-content: center; }
   </style>
 </head>
 <body class="h-screen overflow-hidden flex">
 
   <!-- LEFT SIDEBAR -->
-  <aside class="group w-[80px] hover:w-[260px] transition-all duration-300 bg-[#0e1628] border-r border-[#1e293b] flex flex-col shrink-0 z-50 h-full overflow-hidden">
+  <aside class="group w-[80px] hover:w-[260px] transition-all duration-300 bg-[#000f24] border-r border-[#002d5c] flex flex-col shrink-0 z-50 h-full overflow-hidden">
     <div class="h-24 flex items-center px-6 overflow-hidden">
       <div class="flex items-center">
         <i class="ph-fill ph-heartbeat text-4xl text-blue-500 shrink-0"></i>
@@ -81,7 +81,7 @@
         <button class="relative text-slate-400 hover:text-white transition">
           <i class="ph ph-bell text-2xl shrink-0"></i>
         </button>
-        <div class="flex items-center gap-3 border-l border-[#1e293b] pl-6 cursor-pointer">
+        <div class="flex items-center gap-3 border-l border-[#002d5c] pl-6 cursor-pointer">
           <div class="w-10 h-10 rounded-full bg-cyan-400 text-slate-900 flex items-center justify-center font-bold text-lg" id="avatar-initial">U</div>
         </div>
       </div>

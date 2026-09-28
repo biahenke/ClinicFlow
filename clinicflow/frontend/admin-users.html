@@ -8,7 +8,7 @@
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    body { font-family: 'Inter', sans-serif; background-color: #0b1221; color: #94a3b8; }
+    body { font-family: 'Inter', sans-serif; background-color: #000f24; color: #94a3b8; }
     
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -19,25 +19,26 @@
     .sidebar-item:hover { background: rgba(255,255,255,0.05); color: white; }
     .sidebar-item.active { background: linear-gradient(90deg, #3b82f6, #2563eb); color: white; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
     
-    .dark-card { background: #131c31; border-radius: 1rem; border: 1px solid #1e293b; padding: 1.5rem; }
+    .dark-card { background: #001b3a; border-radius: 1rem; border: 1px solid #002d5c; padding: 1.5rem; }
     
     .table { width: 100%; border-collapse: collapse; }
-    .table th { color: #94a3b8; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; padding: 1rem; text-align: left; border-bottom: 1px solid #1e293b; }
-    .table td { padding: 1.25rem 1rem; font-size: 0.85rem; color: #cbd5e1; border-bottom: 1px solid #1e293b; }
+    .table th { color: #94a3b8; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; padding: 1rem; text-align: left; border-bottom: 1px solid #002d5c; }
+    .table td { padding: 1.25rem 1rem; font-size: 0.85rem; color: #cbd5e1; border-bottom: 1px solid #002d5c; }
     .table tr:hover td { background: rgba(255,255,255,0.02); }
     
     .badge-success { background: rgba(16,185,129,0.15); color: #34d399; font-size: 0.7rem; padding: 0.2rem 0.6rem; border-radius: 99px; font-weight: 600; }
     .badge-error { background: rgba(244,63,94,0.15); color: #fb7185; font-size: 0.7rem; padding: 0.2rem 0.6rem; border-radius: 99px; font-weight: 600; }
     
-    .form-control { background: #0b1221; border: 1px solid #1e293b; color: white; padding: 0.75rem 1rem; border-radius: 0.75rem; font-size: 0.85rem; width: 100%; transition: 0.2s; }
+    .form-control { background: #000f24; border: 1px solid #002d5c; color: white; padding: 0.75rem 1rem; border-radius: 0.75rem; font-size: 0.85rem; width: 100%; transition: 0.2s; }
+.filter-container { margin-left: 0; }
     .form-control:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 2px rgba(59,130,246,0.2); }
     
-    .modal-container { background: #131c31; color: #e2e8f0; border: 1px solid #1e293b; border-radius: 1rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
-    .modal-header { border-bottom: 1px solid #1e293b; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
-    .modal-footer { border-top: 1px solid #1e293b; padding: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem; }
+    .modal-container { background: #001b3a; color: #e2e8f0; border: 1px solid #002d5c; border-radius: 1rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+    .modal-header { border-bottom: 1px solid #002d5c; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+    .modal-footer { border-top: 1px solid #002d5c; padding: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem; }
     
     .btn-secondary { background: transparent; color: #94a3b8; border: 1px solid #334155; padding: 0.5rem 1rem; border-radius: 0.75rem; font-weight: 600; font-size: 0.85rem; transition: 0.2s; }
-    .btn-secondary:hover { background: #1e293b; color: white; }
+    .btn-secondary:hover { background: #002d5c; color: white; }
     .btn-primary { background: #3b82f6; color: white; border: none; padding: 0.5rem 1.25rem; border-radius: 0.75rem; font-weight: 600; font-size: 0.85rem; transition: 0.2s; }
     .btn-primary:hover { background: #2563eb; }
     
@@ -47,7 +48,7 @@
 <body class="h-screen overflow-hidden flex">
 
   <!-- LEFT SIDEBAR -->
-  <aside class="group w-[80px] hover:w-[260px] transition-all duration-300 bg-[#0e1628] border-r border-[#1e293b] flex flex-col shrink-0 z-50 h-full overflow-hidden">
+  <aside class="group w-[80px] hover:w-[260px] transition-all duration-300 bg-[#000f24] border-r border-[#002d5c] flex flex-col shrink-0 z-50 h-full overflow-hidden">
     <div class="h-24 flex items-center px-6 overflow-hidden">
       <div class="flex items-center">
         <i class="ph-fill ph-heartbeat text-4xl text-blue-500 shrink-0"></i>
@@ -79,20 +80,20 @@
   </aside>
 
   <!-- MAIN AREA -->
-  <div class="flex-1 flex flex-col overflow-hidden bg-[#0b1221]">
+  <div class="flex-1 flex flex-col overflow-hidden bg-[#000f24]">
     
     <!-- TOP HEADER -->
     <header class="h-20 px-8 flex items-center justify-between shrink-0">
       <div class="relative">
         <i class="ph ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 shrink-0"></i>
-        <input type="text" placeholder="Buscar..." class="w-[300px] bg-[#131c31] border border-[#1e293b] rounded-full py-2 pl-12 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500">
+        <input type="text" placeholder="Buscar..." class="w-[300px] bg-[#001b3a] border border-[#002d5c] rounded-full py-2 pl-12 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500">
       </div>
       
       <div class="flex items-center gap-6">
         <button class="relative text-slate-400 hover:text-white transition">
           <i class="ph ph-bell text-2xl shrink-0"></i>
         </button>
-        <div class="flex items-center gap-3 border-l border-[#1e293b] pl-6 cursor-pointer">
+        <div class="flex items-center gap-3 border-l border-[#002d5c] pl-6 cursor-pointer">
           <div class="w-10 h-10 rounded-full bg-cyan-400 text-slate-900 flex items-center justify-center font-bold text-lg" id="avatar-initial">U</div>
         </div>
       </div>
@@ -114,12 +115,11 @@
         <div class="overflow-y-auto flex-1">
           
 
-                <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                <div class="filter-container" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
                     <select id="filter-role" class="form-control" style="width: 200px;">
                         <option value="">Todas as Roles</option>
                         <option value="admin">Administrador</option>
                         <option value="medico">Médico</option>
-                        <option value="paciente">Paciente</option>
                     </select>
                 </div>
                 <div class="table-responsive">
@@ -190,7 +190,7 @@
                             <td>
                                 <div style="display: flex; align-items: center; gap: 0.75rem;">
                                     <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-light); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold;">
-                                        ${u.nome.charAt(0).toUpperCase()}
+                                        ${u.nome.replace(/^(Dra?\.?\s+)/i, '').charAt(0).toUpperCase()}
                                     </div>
                                     <span style="font-weight: 500; color: white;">${u.nome}</span>
                                 </div>

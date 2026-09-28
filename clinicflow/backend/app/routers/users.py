@@ -55,6 +55,8 @@ async def get_users(
     query = select(models.User)
     if role:
         query = query.where(models.User.role == role)
+    else:
+        query = query.where(models.User.role != "paciente")
     
     # Count total
     total_query = select(func.count()).select_from(query.subquery())

@@ -9,7 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    body { font-family: 'Inter', sans-serif; background-color: #0b1221; color: #94a3b8; }
+    body { font-family: 'Inter', sans-serif; background-color: #000f24; color: #94a3b8; }
     
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -20,11 +20,11 @@
     .sidebar-item:hover { background: rgba(255,255,255,0.05); color: white; }
     .sidebar-item.active { background: linear-gradient(90deg, #3b82f6, #2563eb); color: white; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
     
-    .stat-card { background: #131c31; border: 1px solid #1e293b; border-radius: 1rem; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; }
-    .dark-card { background: #131c31; border-radius: 1rem; border: 1px solid #1e293b; padding: 1.5rem; }
+    .stat-card { background: #001b3a; border: 1px solid #002d5c; border-radius: 1rem; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; }
+    .dark-card { background: #001b3a; border-radius: 1rem; border: 1px solid #002d5c; padding: 1.5rem; }
     
-    .table-dark th { color: #94a3b8; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; padding-bottom: 1rem; text-align: left; border-bottom: 1px solid #1e293b; }
-    .table-dark td { padding: 1rem 0; font-size: 0.85rem; color: #cbd5e1; border-bottom: 1px solid #1e293b; }
+    .table-dark th { color: #94a3b8; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; padding-bottom: 1rem; text-align: left; border-bottom: 1px solid #002d5c; }
+    .table-dark td { padding: 1rem 0; font-size: 0.85rem; color: #cbd5e1; border-bottom: 1px solid #002d5c; }
     .table-dark tr:last-child td { border-bottom: none; }
     
     .calendar-day { font-size: 0.85rem; display: flex; align-items: center; justify-content: center; height: 28px; width: 28px; cursor: pointer; transition: 0.2s; border-radius: 50%; color: #94a3b8; margin: 0 auto; }
@@ -36,13 +36,13 @@
       background: conic-gradient(#2dd4bf 0% 34%, #3b82f6 34% 83%, #f59e0b 83% 91%, #64748b 91% 100%);
       display: flex; align-items: center; justify-content: center;
     }
-    .donut-inner { width: 110px; height: 110px; border-radius: 50%; background: #131c31; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .donut-inner { width: 110px; height: 110px; border-radius: 50%; background: #001b3a; display: flex; flex-direction: column; align-items: center; justify-content: center; }
   </style>
 </head>
 <body class="h-screen overflow-hidden flex">
 
   <!-- LEFT SIDEBAR -->
-  <aside class="group w-[80px] hover:w-[260px] transition-all duration-300 bg-[#0e1628] border-r border-[#1e293b] flex flex-col shrink-0 z-50 h-full overflow-hidden">
+  <aside class="group w-[80px] hover:w-[260px] transition-all duration-300 bg-[#000f24] border-r border-[#002d5c] flex flex-col shrink-0 z-50 h-full overflow-hidden">
     <div class="h-24 flex items-center px-6 overflow-hidden">
       <div class="flex items-center">
         <i class="ph-fill ph-heartbeat text-4xl text-blue-500 shrink-0"></i>
@@ -81,7 +81,7 @@
       <h2 class="text-xl font-bold text-white" id="page-title">Dashboard Analítico</h2>
       
       <div class="flex items-center gap-6">
-        <div class="flex items-center gap-3 border-l border-[#1e293b] pl-6 cursor-pointer">
+        <div class="flex items-center gap-3 border-l border-[#002d5c] pl-6 cursor-pointer">
           <div class="w-10 h-10 rounded-full bg-cyan-400 text-slate-900 flex items-center justify-center font-bold text-lg" id="avatar-initial">?</div>
           <div class="flex flex-col">
             <span class="text-white font-semibold text-sm" id="profile-name">Carregando...</span>
@@ -93,7 +93,7 @@
 
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    body { font-family: 'Inter', sans-serif; background-color: #0b1221; color: #94a3b8; }
+    body { font-family: 'Inter', sans-serif; background-color: #000f24; color: #94a3b8; }
     
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -104,11 +104,11 @@
     .sidebar-item:hover { background: rgba(255,255,255,0.05); color: white; }
     .sidebar-item.active { background: linear-gradient(90deg, #3b82f6, #2563eb); color: white; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
     
-    .stat-card { background: #131c31; border: 1px solid #1e293b; border-radius: 1rem; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; }
-    .dark-card { background: #131c31; border-radius: 1rem; border: 1px solid #1e293b; padding: 1.5rem; }
+    .stat-card { background: #001b3a; border: 1px solid #002d5c; border-radius: 1rem; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; }
+    .dark-card { background: #001b3a; border-radius: 1rem; border: 1px solid #002d5c; padding: 1.5rem; }
     
-    .table-dark th { color: #94a3b8; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; padding-bottom: 1rem; text-align: left; border-bottom: 1px solid #1e293b; }
-    .table-dark td { padding: 1rem 0; font-size: 0.85rem; color: #cbd5e1; border-bottom: 1px solid #1e293b; }
+    .table-dark th { color: #94a3b8; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; padding-bottom: 1rem; text-align: left; border-bottom: 1px solid #002d5c; }
+    .table-dark td { padding: 1rem 0; font-size: 0.85rem; color: #cbd5e1; border-bottom: 1px solid #002d5c; }
     .table-dark tr:last-child td { border-bottom: none; }
     
     .calendar-day { font-size: 0.85rem; display: flex; align-items: center; justify-content: center; height: 28px; width: 28px; cursor: pointer; transition: 0.2s; border-radius: 50%; color: #94a3b8; margin: 0 auto; }
@@ -120,7 +120,7 @@
       background: conic-gradient(#2dd4bf 0% 34%, #3b82f6 34% 83%, #f59e0b 83% 91%, #64748b 91% 100%);
       display: flex; align-items: center; justify-content: center;
     }
-    .donut-inner { width: 110px; height: 110px; border-radius: 50%; background: #131c31; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .donut-inner { width: 110px; height: 110px; border-radius: 50%; background: #001b3a; display: flex; flex-direction: column; align-items: center; justify-content: center; }
   </style>
 
     <!-- CONTENT -->
@@ -139,9 +139,9 @@
           <button class="filter-btn px-4 py-2 rounded-xl text-sm font-semibold transition" data-range="mes">Este Mês</button>
         </div>
         <div class="flex items-center gap-3">
-          <input type="date" id="filter-start" class=" border border-[#1e293b] rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-sky-500 [color-scheme:dark]">
+          <input type="date" id="filter-start" class=" border border-[#002d5c] rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-sky-500 [color-scheme:dark]">
           <span class="text-slate-500 text-sm">até</span>
-          <input type="date" id="filter-end" class=" border border-[#1e293b] rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-sky-500 [color-scheme:dark]">
+          <input type="date" id="filter-end" class=" border border-[#002d5c] rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-sky-500 [color-scheme:dark]">
           <button id="btn-custom" class="px-4 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-sm font-bold shadow-[0_0_15px_rgba(14,165,233,0.3)] transition">Filtrar</button>
         </div>
       </div>
@@ -184,9 +184,9 @@
             </div>
 
             <div class="glass-card p-6 rounded-2xl relative overflow-hidden group">
-                <div class="absolute -right-6 -top-6 w-24 h-24 bg-purple-500/20 rounded-full blur-2xl group-hover:bg-purple-500/30 transition"></div>
+                <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-600/20 rounded-full blur-2xl group-hover:bg-blue-600/30 transition"></div>
                 <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400">
+                    <div class="w-10 h-10 rounded-full bg-blue-600/20 flex items-center justify-center text-blue-400">
                         <i class="ph-fill ph-chart-line-up text-xl"></i>
                     </div>
                     <span class="text-slate-400 font-semibold text-sm">Taxa Conclusão</span>
@@ -232,8 +232,8 @@
                  <i class="ph-fill ph-chart-bar text-xl text-sky-400"></i>
                  Desempenho por Médico
                </h3>
-               <div class="flex  rounded-lg p-1 border border-[#1e293b]" id="medico-toggle">
-                   <button class="medico-btn active px-3 py-1 rounded-md text-xs font-semibold text-white bg-[#1e293b]" data-top="5">Top 5</button>
+               <div class="flex  rounded-lg p-1 border border-[#002d5c]" id="medico-toggle">
+                   <button class="medico-btn active px-3 py-1 rounded-md text-xs font-semibold text-white bg-[#002d5c]" data-top="5">Top 5</button>
                    <button class="medico-btn px-3 py-1 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition" data-top="10">Top 10</button>
                    <button class="medico-btn px-3 py-1 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition" data-top="all">Ver Todos</button>
                </div>
@@ -340,11 +340,11 @@
           if(e.target.tagName !== 'BUTTON') return;
           
           document.querySelectorAll('.medico-btn').forEach(btn => {
-              btn.classList.remove('active', 'text-white', 'bg-[#1e293b]');
+              btn.classList.remove('active', 'text-white', 'bg-[#002d5c]');
               btn.classList.add('text-slate-400');
           });
           e.target.classList.remove('text-slate-400');
-          e.target.classList.add('active', 'text-white', 'bg-[#1e293b]');
+          e.target.classList.add('active', 'text-white', 'bg-[#002d5c]');
           
           currentMedicoTop = e.target.dataset.top === 'all' ? 'all' : parseInt(e.target.dataset.top);
           renderMedicoChart();
@@ -403,7 +403,7 @@
             ];
             
             document.getElementById('status-legend').innerHTML = statusConfig.map(s => `
-                <div class="flex justify-between items-center p-2.5  rounded-lg border border-[#1e293b]">
+                <div class="flex justify-between items-center p-2.5  rounded-lg border border-[#002d5c]">
                     <div class="flex items-center gap-2">
                         <div class="w-3 h-3 rounded-full ${s.bg}"></div> 
                         <span class="text-xs font-semibold text-slate-300">${s.label}</span>
@@ -429,7 +429,7 @@
                             <span class="text-slate-300 uppercase tracking-wide">${e[0]}</span>
                             <span class="text-white">${e[1]}</span>
                         </div>
-                        <div class="h-2 w-full  rounded-full overflow-hidden border border-[#1e293b]">
+                        <div class="h-2 w-full  rounded-full overflow-hidden border border-[#002d5c]">
                             <div class="h-full bg-gradient-to-r from-sky-600 to-cyan-400 rounded-full shadow-[0_0_10px_rgba(34,211,238,0.5)]" style="width: ${perc}%"></div>
                         </div>
                     </div>
@@ -490,7 +490,7 @@
                     x: {
                         beginAtZero: true,
                         ticks: { stepSize: 1, color: '#94a3b8', font: { family: 'Inter', size: 11 } },
-                        grid: { color: '#1e293b' },
+                        grid: { color: '#002d5c' },
                         border: { display: false }
                     },
                     y: {
